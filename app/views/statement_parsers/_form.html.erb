@@ -1,0 +1,57 @@
+<%= form_for(statement_parser.becomes(StatementParsers::ParserBase), :url => {:controller => "statement_parsers", :action => @action}, :html => {:class => "form-horizontal center", :data_type => "form-statement-parser"}) do |f| %>
+  <% @object = statement_parser %>
+  <%= render "layouts/form_errors_panel" %>
+  <div class="form-group">
+    <%= f.label :name, "Statement parser name:", class: "col-md-4 control-label" %>
+    <div class="col-md-8">
+      <%= f.text_field :name, class: "form-control", :required => true %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :name, "Type:", class: "col-md-4 control-label" %>
+    <div class="col-md-8">
+      <%= f.select :type, options_for_select(StatementParsers::ParserBase.types, statement_parser.type), {:prompt => "<Select a Statement Parser>"}, {:class => "form-control", :required => true} %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :name, "Description:", class: "col-md-4 control-label" %>
+    <div class="col-md-8">
+      <%= f.text_area :description, class: "form-control" %>
+    </div>
+  </div>
+
+  <div data-type="conditional-section" show-when-type-is="PlainTextParser">
+    <div class="form-group">
+      <%= f.label :name, "Regular Expression:", class: "col-md-4 control-label" %>
+      <div class="col-md-8">
+        <div class="input-group">
+          <%= f.text_field :plain_text_regex, class: "form-control" %>
+          <span class="input-group-btn">
+            <a class="btn btn-default" on-click-callback="regexpFormat"><i class="glyphicon glyphicon-info-sign"></i></a>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :name, "Date format:", class: "col-md-4 control-label" %>
+      <div class="col-md-8">
+        <div class="input-group">
+          <%= f.text_field :plain_text_date_format, class: "form-control" %>
+          <span class="input-group-btn">
+            <a class="btn btn-default" on-click-callback="helpRubyDateFormat"><i class="glyphicon glyphicon-info-sign"></i></a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="actions">
+    <%= f.submit :class => "btn btn-success pull-right" %>
+    <%= link_to statement_parsers_path, class: "btn btn-link pull-right" do %>
+      <i class="glyphicon glyphicon-arrow-left"></i> Back to Accounts list
+    <% end %>
+  </div>
+<% end %>

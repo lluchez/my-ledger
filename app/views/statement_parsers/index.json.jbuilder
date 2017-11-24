@@ -1,0 +1,1 @@
+json.array! @parsers, partial: 'statement_parsers/statement_parser', as: :statement_parser

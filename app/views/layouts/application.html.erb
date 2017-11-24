@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Finance App</title>
+    <%= favicon_link_tag 'logo.ico' %>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <%= render "layouts/header" %>
+    <div class="container">
+      <% flash.each do |name, messages| %>
+        <%
+          classes_map = {
+            "error" => "alert-danger",
+            "alert" => "alert-danger",
+            "notice" => "alert-info"
+          }
+          classnames = ["alert"]
+          classnames += [classes_map[name]] if classes_map[name]
+          messages = [messages] if messages.kind_of?(String)
+        %>
+        <div id="error_explanation" class="<%= classnames.join(" ") %>">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">&times;</a>
+          <ul>
+            <% messages.each do |message| %>
+            <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      <%= yield %>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+<h1>My Bank Accounts</h1>
+
+<table class="table table-manage table-responsive table-striped table-hover table-bordered table-condensed">
+  <thead>
+    <tr>
+      <th>Account Name</th>
+      <th>Statement Parser</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @bank_accounts.each do |bank_account| %>
+      <tr>
+        <td><%= link_to bank_account.name, bank_account %></td>
+        <td><%= bank_account.statement_parser.name %></td>
+        <td class="actions">
+          <%= link_to '', edit_bank_account_path(bank_account), class: "icon icon-edit" %>
+          <%= link_to '', bank_account, class: "icon icon-delete", method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to new_bank_account_path, class: "btn btn-primary pull-right" do %>
+  <i class="glyphicon glyphicon-plus"></i> New Bank Account
+<% end %>

@@ -1,0 +1,1 @@
+json.partial! "statement_parsers/statement_parser", statement_parser: @parser

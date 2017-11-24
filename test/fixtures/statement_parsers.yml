@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  type: 
+  plain_text_regex: MyString
+  plain_text_date_format: MyString
+
+two:
+  name: MyString
+  description: MyText
+  type: 
+  plain_text_regex: MyString
+  plain_text_date_format: MyString

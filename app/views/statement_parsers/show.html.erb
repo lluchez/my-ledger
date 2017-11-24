@@ -1,0 +1,18 @@
+<p>
+  <strong>Name:</strong>
+  <%= @parser.name %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @parser.type || @parser.class.to_s %>
+</p>
+
+<div class="actions">
+  <%= link_to edit_statement_parser_path(@parser), :class => "btn btn-primary pull-right" do %>
+    <i class="glyphicon glyphicon-pencil"></i> Edit Statement Parser
+  <% end %>
+  <%= link_to statement_parsers_path, class: "btn btn-link pull-right" do %>
+    <i class="glyphicon glyphicon-arrow-left"></i> Back to Parsers list
+  <% end %>
+</div>
