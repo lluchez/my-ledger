@@ -1,24 +1,33 @@
-# README
+# My Ledger
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+**My Ledger** is an application to help you keep track of your expenses.
+You will feed it with your credit card statements and you can categorize every purchase you made to see how you're spending your money.
 
-Things you may want to cover:
+# Technical
 
-* Ruby version
+## To do
+- Add a mailer on Heroku
+- Add React
+- Add Specs/CircleCI/CodeClimate/CodeCoverage
 
-* System dependencies
+## Notes for developer
 
-* Configuration
+### Assets
+Assets are precomplied and a diggest will be appended for versionning. Check [Coding Links to Assets](http://guides.rubyonrails.org/asset_pipeline.html#coding-links-to-assets) for more details.
+- Create ab image tag: `<%= image_tag "icons/rails.png" %>`
+- ERB: `background-image: url(<%= asset_path 'image.png' %>)`
+- [SASS/SCSS](http://guides.rubyonrails.org/asset_pipeline.html#css-and-sass): `background-image: image-url("rails.png")`
 
-* Database creation
+## Useful commands
 
-* Database initialization
+### Heroku
 
-* How to run the test suite
+Publish a branch to Heroku:
+`git push -f heroku <branch_name>:master`
 
-* Services (job queues, cache servers, search engines, etc.)
+Open a rails console:
+`heroku.cmd run rails c`
 
-* Deployment instructions
-
-* ...
+Open bash:
+`heroku.cmd run bash`
+NOTE: requires to close any open rails console when using the free version (limited to only 1 connection opened)
