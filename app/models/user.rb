@@ -5,15 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :lockable
 
-  #before_save :validate_model
   validates :name, presence: true
 
-  has_many :accounts, class_name: "BankAccount", :foreign_key => 'owner_id'
-
-  #private
-
-  #def validate_model
-  #  errors.add(:name, "Name is required") if self.name.blank?
-  #end
+  has_many :bank_accounts
 
 end

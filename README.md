@@ -2,13 +2,13 @@
 
 **My Ledger** is an application to help you keep track of your expenses.
 You will feed it with your credit card statements and you can categorize every purchase you made to see how you're spending your money.
+Work in progress.
 
 # Technical
 
 ## To do
 - Add a mailer on Heroku
 - Add React
-- Add Specs/CircleCI/CodeClimate/CodeCoverage
 
 ## Notes for developer
 

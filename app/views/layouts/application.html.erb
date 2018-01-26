@@ -12,7 +12,7 @@
   <body>
     <%= render "layouts/header" %>
     <div class="container">
-      <% flash.each do |name, messages| %>
+      <% flash.each do |type, messages| %>
         <%
           classes_map = {
             "error" => "alert-danger",
@@ -20,7 +20,7 @@
             "notice" => "alert-info"
           }
           classnames = ["alert"]
-          classnames += [classes_map[name]] if classes_map[name]
+          classnames += [classes_map[type]] if classes_map[type]
           messages = [messages] if messages.kind_of?(String)
         %>
         <div id="error_explanation" class="<%= classnames.join(" ") %>">

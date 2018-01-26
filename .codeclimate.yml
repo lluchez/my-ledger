@@ -1,0 +1,47 @@
+engines:
+  rubocop:
+    enabled: true
+    exclude_fingerprints:
+    # ...
+    checks:
+      Rubocop/Lint/HandleExceptions:
+        enabled: false
+      Rubocop/Metrics/ModuleLength:
+        enabled: false
+  csslint:
+    enabled: true
+  eslint:
+    enabled: true
+    checks:
+      max-statements:
+        enabled: false
+      complexity:
+        enabled: false
+  brakeman:
+    enabled: false
+  bundler-audit:
+    enabled: true
+    exclude_fingerprints:
+  fixme:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+        ruby:
+          mass_threshold: 400
+
+ratings:
+  paths:
+  - app/**
+  - lib/**
+  - Gemfile.lock
+  - "**.rb"
+  - "**.js"
+
+exclude_paths:
+  - spec/**/*
+  - script/**/*
+  - config/**/*
+  - db/schema.rb
+  - "**/vendor/**/*"

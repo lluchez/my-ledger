@@ -69,6 +69,7 @@ group :test do
   gem 'simplecov', '0.7.1', :require => false
   gem 'webmock'
   gem 'rspec_junit_formatter', '0.2.2'
+  gem 'rails-controller-testing'
 end
 
 group :development do
