@@ -22,7 +22,11 @@
   <div class="form-group">
     <%= f.label :name, "Statement parser:", class: "col-md-4 control-label" %>
     <div class="col-md-8">
-      <%= f.select :statement_parser_id, options_for_select(@statement_parsers, bank_account.statement_parser_id), {:prompt => "<Select a Statement Parser>"}, {:class => "form-control", :required => true} %>
+      <%= f.select :statement_parser_id,
+        options_for_select(@statement_parsers, bank_account.statement_parser_id),
+        {:prompt => "<Select a Statement Parser>"},
+        {:class => "form-control", :required => true}
+      %>
     </div>
   </div>
 

@@ -3,9 +3,11 @@ class StatementParsers::ParserBase < ApplicationRecord
   validates_presence_of :name
   validate :type_should_be_valid
   validate :validate_specific_fields
-  
+
   self.inheritance_column = :type
   self.table_name = "statement_parsers"
+
+  has_many :bank_accounts, :foreign_key => 'statement_parser_id'
 
   def self.types
     %w(PlainTextParser)
@@ -34,7 +36,7 @@ class StatementParsers::ParserBase < ApplicationRecord
           errors.add(:plain_text_regex, "Regular expression is required for Plain Text parsers")
         else
           begin
-            ereg = Regexp.new(self.plain_text_regex) 
+            ereg = Regexp.new(self.plain_text_regex)
           rescue
             errors.add(:plain_text_regex, "Invalid regular expression")
           end

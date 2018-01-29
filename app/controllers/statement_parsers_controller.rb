@@ -29,14 +29,15 @@ class StatementParsersController < ApplicationController
   # POST /statement_parsers
   # POST /statement_parsers.json
   def create
-    @parser = StatementParsers::ParserBase.new(statement_params)
+    parser_params = statement_params
+    @parser = StatementParsers::ParserBase.new(parser_params || {})
     respond_to do |format|
-      if @parser.save
-        format.html { redirect_to statement_parsers_url, notice: "Parser #{@parser.name} was successfully created." }
-        format.json { render :show, status: :created, location: @parser }
+      if parser_params.present? && @parser.save
+        format.html { redirect_to statement_parsers_url, :flash => {:notice => "Parser #{@parser.name} was successfully created."} }
+        format.json { render :show, :status => :created, location: @parser }
       else
-        format.html { render :new, :flash => {:error => @parser.errors.full_messages} }
-        format.json { render json: @parser.errors, status: :unprocessable_entity }
+        format.html { render :new, :flash => {:error => @parser.errors.full_messages}, :status => :unprocessable_entity }
+        format.json { render :json => @parser.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -44,13 +45,14 @@ class StatementParsersController < ApplicationController
   # PATCH/PUT /statement_parsers/1
   # PATCH/PUT /statement_parsers/1.json
   def update
+    parser_params = statement_params
     respond_to do |format|
-      if @parser.update(statement_params)
-        format.html { redirect_to statement_parsers_url, notice: "Parser #{@parser.name} was successfully updated." }
-        format.json { render :show, status: :ok, location: @parser }
+      if (parser_params.blank? && !parser_params.nil?) || (parser_params.present? && @parser.update(parser_params))
+        format.html { redirect_to statement_parsers_url, :flash => {:notice => "Parser #{@parser.name} was successfully updated."} }
+        format.json { render :show, :status => :ok, :location => @parser }
       else
         format.html { render :edit, :flash => {:error => @parser.errors.full_messages} }
-        format.json { render json: @parser.errors, status: :unprocessable_entity }
+        format.json { render :json => @parser.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -59,17 +61,12 @@ class StatementParsersController < ApplicationController
   # DELETE /statement_parsers/1.json
   def destroy
     respond_to do |format|
-      if @parser.present?
-        if @parser.destroy
-          format.html { redirect_to statement_parsers_url, notice: "Parser #{@parser.name} was successfully deleted." }
-          format.json { head :no_content }
-        else
-          format.html { redirect_to statement_parsers_url, :flash => {:error => @parser.errors.full_messages} }
-          format.json { render json: @parser.errors, status: :unprocessable_entity }
-        end
+      if @parser.destroy
+        format.html { redirect_to statement_parsers_url, :flash => {:notice => "Parser #{@parser.name} was successfully deleted."} }
+        format.json { head :no_content }
       else
-        format.html { redirect_to statement_parsers_url, :flash => {:error => 'Unable to delete this bank account.'} }
-        format.json { head :no_content, status: 404 }
+        format.html { redirect_to statement_parser_url(@parser), :flash => {:error => @parser.errors.full_messages} }
+        format.json { render :json => @parser.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -83,5 +80,7 @@ class StatementParsersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def statement_params
       params.require(:statement_parsers_parser_base).permit(:name, :description, :type, :plain_text_regex, :plain_text_date_format)
+    rescue ActionController::ParameterMissing
+      nil
     end
 end
