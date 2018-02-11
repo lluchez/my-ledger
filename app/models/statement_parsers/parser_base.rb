@@ -1,13 +1,14 @@
 class StatementParsers::ParserBase < ApplicationRecord
-  before_destroy :before_destroying
+  before_destroy :before_destroying # to declare before any `:has_many :dependend => :destroy`
+
+  has_many :bank_accounts, :foreign_key => 'statement_parser_id', :dependent => :destroy
+
   validates_presence_of :name
   validate :type_should_be_valid
   validate :validate_specific_fields
 
   self.inheritance_column = :type
   self.table_name = "statement_parsers"
-
-  has_many :bank_accounts, :foreign_key => 'statement_parser_id'
 
   def self.types
     %w(PlainTextParser)
@@ -47,7 +48,7 @@ class StatementParsers::ParserBase < ApplicationRecord
 
     def before_destroying
       if BankAccount.where(:statement_parser_id => self.id).any?
-        errors.add(:base, "This parser is used and can not be remove now")
+        errors.add(:base, "This parser is used and cannot be removed now")
         throw :abort
       end
     end

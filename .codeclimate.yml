@@ -1,8 +1,7 @@
 engines:
   rubocop:
     enabled: true
-    exclude_fingerprints:
-    # ...
+    exclude_fingerprints: []
     checks:
       Rubocop/Lint/HandleExceptions:
         enabled: false
@@ -21,7 +20,7 @@ engines:
     enabled: false
   bundler-audit:
     enabled: true
-    exclude_fingerprints:
+    exclude_fingerprints: []
   fixme:
     enabled: true
   duplication:

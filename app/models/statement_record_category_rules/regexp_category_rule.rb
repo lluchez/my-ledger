@@ -1,0 +1,3 @@
+class StatementRecordCategoryRules::RegexpCategoryRule < StatementRecordCategoryRules::CategoryRuleBase
+
+end

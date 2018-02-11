@@ -6,7 +6,7 @@ class BankAccountsController < ApplicationController
   # GET /bank_accounts
   # GET /bank_accounts.json
   def index
-    @bank_accounts = BankAccount.where(:user_id => current_user.id).includes(:statement_parser).order(:name)
+    @bank_accounts = BankAccount.where(:user_id => current_user.id).includes(:parser).order(:name)
   end
 
   # GET /bank_accounts/1

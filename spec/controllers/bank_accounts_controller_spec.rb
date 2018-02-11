@@ -7,6 +7,8 @@ RSpec.describe BankAccountsController, type: :controller do
   let(:user) { FactoryGirl.create(:user) }
 
   describe "GET #index" do
+    let!(:bank_account) { FactoryGirl.create(:bank_account, :user_id => user.id) }
+
     it "should redirect to the sign-in page when not logged-in" do
       sign_in(nil)
 
@@ -66,7 +68,7 @@ RSpec.describe BankAccountsController, type: :controller do
   describe "POST #create" do
     let(:bank_account_attrs) do
       attrs = FactoryGirl.attributes_for(:bank_account)
-      attrs.except(:statement_parser).merge(:statement_parser_id => attrs[:statement_parser].id)
+      attrs.except(:parser).merge(:statement_parser_id => attrs[:parser].id)
     end
 
     it "should redirect to the sign-in page when not logged-in" do

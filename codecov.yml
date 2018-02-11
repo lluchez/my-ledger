@@ -3,7 +3,7 @@ coverage:
     patch: false
     project:
       default:
-        target: '70'
+        target: '90'
         threshold: '0.1'
         branches: null
         only_pulls: false

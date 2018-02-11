@@ -18,6 +18,17 @@
 #
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
+#
+# example: https://stackoverflow.com/questions/808547/fully-custom-validation-error-message-with-rails
 
 en:
-  hello: "Hello world"
+  activerecord:
+    attributes:
+      user:
+        email: "Email address"
+    errors:
+      models:
+        statement_record_category_rules/category_rule_base: &category_rule
+          attributes:
+            pattern:
+              blank: "Regular expression is required"

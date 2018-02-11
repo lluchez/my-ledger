@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170927031316) do
+ActiveRecord::Schema.define(version: 20180129031049) do
 
   create_table "bank_accounts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name"
@@ -23,6 +23,18 @@ ActiveRecord::Schema.define(version: 20170927031316) do
     t.index ["user_id"], name: "fk_rails_92daa8a387", using: :btree
   end
 
+  create_table "bank_statements", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.integer  "user_id",                                                   null: false
+    t.integer  "bank_account_id",                                           null: false
+    t.integer  "month",                                                     null: false
+    t.integer  "year",                                                      null: false
+    t.decimal  "total_amount",    precision: 10, scale: 2, default: "0.0", null: false
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
+    t.index ["bank_account_id", "month", "year"], name: "index_bank_statements_on_bank_account_id_and_month_and_year", unique: true, using: :btree
+    t.index ["user_id"], name: "fk_rails_39a1c6060b", using: :btree
+  end
+
   create_table "statement_parsers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name",                                 null: false
     t.text     "description",            limit: 65535
@@ -32,6 +44,47 @@ ActiveRecord::Schema.define(version: 20170927031316) do
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
     t.index ["name"], name: "index_statement_parsers_on_name", unique: true, using: :btree
+  end
+
+  create_table "statement_record_categories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string   "name",                      null: false
+    t.integer  "user_id",                   null: false
+    t.string   "color"
+    t.string   "icon"
+    t.boolean  "active",     default: true
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["user_id"], name: "fk_rails_9942527c5c", using: :btree
+  end
+
+  create_table "statement_record_category_rules", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string   "name",                            null: false
+    t.string   "type",                            null: false
+    t.integer  "user_id",                         null: false
+    t.integer  "category_id",                     null: false
+    t.string   "pattern",                         null: false
+    t.boolean  "case_insensitive"
+    t.boolean  "active",           default: true
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.index ["category_id"], name: "fk_rails_40ff3e417c", using: :btree
+    t.index ["user_id"], name: "fk_rails_15b479eb25", using: :btree
+  end
+
+  create_table "statement_records", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.integer  "user_id",                                    null: false
+    t.integer  "statement_id",                               null: false
+    t.integer  "category_id"
+    t.integer  "category_rule_id"
+    t.decimal  "amount",           precision: 10, scale: 2, null: false
+    t.date     "date",                                       null: false
+    t.string   "description",                                null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.index ["category_id"], name: "fk_rails_170dd862e1", using: :btree
+    t.index ["category_rule_id"], name: "fk_rails_9f7c830a4d", using: :btree
+    t.index ["statement_id"], name: "fk_rails_c5a488a3d1", using: :btree
+    t.index ["user_id"], name: "fk_rails_15f285568f", using: :btree
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
@@ -63,4 +116,13 @@ ActiveRecord::Schema.define(version: 20170927031316) do
 
   add_foreign_key "bank_accounts", "statement_parsers"
   add_foreign_key "bank_accounts", "users"
+  add_foreign_key "bank_statements", "bank_accounts"
+  add_foreign_key "bank_statements", "users"
+  add_foreign_key "statement_record_categories", "users"
+  add_foreign_key "statement_record_category_rules", "statement_record_categories", column: "category_id"
+  add_foreign_key "statement_record_category_rules", "users"
+  add_foreign_key "statement_records", "bank_statements", column: "statement_id"
+  add_foreign_key "statement_records", "statement_record_categories", column: "category_id"
+  add_foreign_key "statement_records", "statement_record_category_rules", column: "category_rule_id"
+  add_foreign_key "statement_records", "users"
 end

@@ -17,6 +17,6 @@ module ControllerHelpers
 
   def expect_to_render_404
     expect(response.status).to eq(404)
-    response.should render_template(:file => "#{Rails.root}/app/views/errors/404.html.erb")
+    expect(response).to render_template(:file => "#{Rails.root}/app/views/errors/404.html.erb")
   end
 end

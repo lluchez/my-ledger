@@ -9,6 +9,19 @@ describe StatementParsers::ParserBase do
   it { should_not allow_value("UnknownParser").for(:type) }
   it { should allow_value("PlainTextParser").for(:type) }
 
+
+  describe '#classname_from_type' do
+    it 'should return the passed type if accepted' do
+      StatementParsers::ParserBase::types.each do |type|
+        expect(StatementParsers::ParserBase::classname_from_type(type)).to eq(type)
+      end
+    end
+    it 'should return nil when the passed type is is not valid' do
+      expect(StatementParsers::ParserBase::classname_from_type("Invalid")).to be_nil
+      expect(StatementParsers::ParserBase::classname_from_type(nil)).to be_nil
+    end
+  end
+
   describe '#validate_specific_fields' do
     context 'PlainTextParser' do
       let(:attrs) { FactoryGirl.attributes_for(:plain_text_parser) }
