@@ -1,0 +1,81 @@
+defaults: &defaults
+  working_directory: ~/my-ledger
+
+version: 2
+jobs:
+  build-and-test-rails:
+    <<: *defaults
+    docker:
+      - image: circleci/ruby:2.4.2-node-browsers
+        environment:
+          RAILS_ENV: test
+          RACK_ENV: test
+      - image: circleci/mysql:5.6
+
+    steps:
+      - checkout
+      # Restore bundle cache
+      - restore_cache:
+          keys:
+            - rails-my-ledger-{{ checksum "Gemfile.lock" }}
+            - rails-my-ledger-
+
+      - run: gem install bundler
+      # Bundle install dependencies
+      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
+
+      - run:
+          name: Database Setup
+          command: |
+            cp config/database_sample.yml config/database.yml
+            bundle exec rake db:create db:schema:load --trace
+            bundle exec rake db:test:prepare
+
+      # Store bundle cache
+      - save_cache:
+          key: rails-my-ledger-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - run: bundle exec rspec
+
+  # build-frontend:
+  #     <<: *defaults
+  #     docker:
+  # # using node 8 so that we have npm 5 on CircleCI, for some reason `(sudo) npm install -g npm@latest` screws up due to "semver" missing
+  #       - image: circleci/node:8.0
+  #     steps:
+  #       - checkout
+  #       - run:
+  #           name: "Checking Versions"
+  #           command: |
+  #             node --version
+  #             npm --version
+  #       # Download and cache dependencies
+  #       - restore_cache:
+  #           keys:
+  #           - v2-my-ledger-frontend-{{ checksum "package.json" }}
+  #           # fallback to using the latest cache if no exact match is found
+  #           - v2-my-ledger-frontend-
+
+  #       - run: npm run ci-preinstall-setup
+  #       - run: npm install
+  #       - save_cache:
+  #           paths:
+  #             - node_modules
+  #           key: v2-my-ledger-frontend-{{ checksum "package.json" }}
+
+  #       - run: npm rebuild node-sass
+  #       - run: npm run build:prod
+  #       # - run: npm run lint
+  #       - persist_to_workspace:
+  #           root: .
+  #           paths:
+  #             - public/dist
+  #             - node_modules
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build-and-test-rails
+      # - build-frontend
