@@ -25,30 +25,18 @@ class StatementParsers::ParserBase < ApplicationRecord
   private
     def type_should_be_valid
       if self.type.blank?
-        errors.add(:type, "Parser type is required")
+        errors.add(:type, :blank)
       elsif !self.class.types.include?(self.type)
-        errors.add(:type, "Invalid parser type")
+        errors.add(:type, :invalid)
       end
     end
 
-    def validate_specific_fields
-      if self.type == 'PlainTextParser'
-        if self.plain_text_regex.blank?
-          errors.add(:plain_text_regex, "Regular expression is required for Plain Text parsers")
-        else
-          begin
-            ereg = Regexp.new(self.plain_text_regex)
-          rescue
-            errors.add(:plain_text_regex, "Invalid regular expression")
-          end
-        end
-        errors.add(:plain_text_date_format, "Date format is required for Plain Text parsers") if self.plain_text_date_format.blank?
-      end
-    end
+    # to override in the inheriting class
+    def validate_specific_fields; end
 
     def before_destroying
       if BankAccount.where(:statement_parser_id => self.id).any?
-        errors.add(:base, "This parser is used and cannot be removed now")
+        errors.add(:base, :cant_delete_in_use)
         throw :abort
       end
     end

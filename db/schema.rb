@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180129031049) do
+ActiveRecord::Schema.define(version: 20180301111824) do
 
   create_table "bank_accounts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name"
@@ -24,13 +24,13 @@ ActiveRecord::Schema.define(version: 20180129031049) do
   end
 
   create_table "bank_statements", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
-    t.integer  "user_id",                                                   null: false
-    t.integer  "bank_account_id",                                           null: false
-    t.integer  "month",                                                     null: false
-    t.integer  "year",                                                      null: false
+    t.integer  "user_id",                                                  null: false
+    t.integer  "bank_account_id",                                          null: false
+    t.integer  "month",                                                    null: false
+    t.integer  "year",                                                     null: false
     t.decimal  "total_amount",    precision: 10, scale: 2, default: "0.0", null: false
-    t.datetime "created_at",                                                null: false
-    t.datetime "updated_at",                                                null: false
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
     t.index ["bank_account_id", "month", "year"], name: "index_bank_statements_on_bank_account_id_and_month_and_year", unique: true, using: :btree
     t.index ["user_id"], name: "fk_rails_39a1c6060b", using: :btree
   end
@@ -72,15 +72,15 @@ ActiveRecord::Schema.define(version: 20180129031049) do
   end
 
   create_table "statement_records", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
-    t.integer  "user_id",                                    null: false
-    t.integer  "statement_id",                               null: false
+    t.integer  "user_id",                                   null: false
+    t.integer  "statement_id",                              null: false
     t.integer  "category_id"
     t.integer  "category_rule_id"
     t.decimal  "amount",           precision: 10, scale: 2, null: false
-    t.date     "date",                                       null: false
-    t.string   "description",                                null: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.date     "date",                                      null: false
+    t.string   "description",                               null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
     t.index ["category_id"], name: "fk_rails_170dd862e1", using: :btree
     t.index ["category_rule_id"], name: "fk_rails_9f7c830a4d", using: :btree
     t.index ["statement_id"], name: "fk_rails_c5a488a3d1", using: :btree

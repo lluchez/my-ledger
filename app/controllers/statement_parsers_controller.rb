@@ -33,7 +33,7 @@ class StatementParsersController < ApplicationController
     @parser = StatementParsers::ParserBase.new(parser_params || {})
     respond_to do |format|
       if parser_params.present? && @parser.save
-        format.html { redirect_to statement_parsers_url, :flash => {:notice => "Parser #{@parser.name} was successfully created."} }
+        format.html { redirect_to statement_parsers_url, :flash => {:notice => i18n_message(:created, {:name => @parser.name}) } }
         format.json { render :show, :status => :created, location: @parser }
       else
         format.html { render :new, :flash => {:error => @parser.errors.full_messages}, :status => :unprocessable_entity }
@@ -48,7 +48,7 @@ class StatementParsersController < ApplicationController
     parser_params = statement_params
     respond_to do |format|
       if (parser_params.blank? && !parser_params.nil?) || (parser_params.present? && @parser.update(parser_params))
-        format.html { redirect_to statement_parsers_url, :flash => {:notice => "Parser #{@parser.name} was successfully updated."} }
+        format.html { redirect_to statement_parsers_url, :flash => {:notice => i18n_message(:updated, {:name => @parser.name})} }
         format.json { render :show, :status => :ok, :location => @parser }
       else
         format.html { render :edit, :flash => {:error => @parser.errors.full_messages} }
@@ -62,7 +62,7 @@ class StatementParsersController < ApplicationController
   def destroy
     respond_to do |format|
       if @parser.destroy
-        format.html { redirect_to statement_parsers_url, :flash => {:notice => "Parser #{@parser.name} was successfully deleted."} }
+        format.html { redirect_to statement_parsers_url, :flash => {:notice => i18n_message(:destroyed, {:name => @parser.name})} }
         format.json { head :no_content }
       else
         format.html { redirect_to statement_parser_url(@parser), :flash => {:error => @parser.errors.full_messages} }
@@ -74,7 +74,7 @@ class StatementParsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_statement
-      @parser = StatementParsers::ParserBase.where(:id => params[:id]).last or not_found
+      @parser = StatementParsers::ParserBase.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

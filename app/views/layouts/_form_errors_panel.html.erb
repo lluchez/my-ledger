@@ -1,11 +1,12 @@
-  <% if @object.errors.any? %>
+  <% if object.errors.any? %>
     <div id="error_explanation" class="alert alert-danger">
       <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">&times;</a>
       <ul>
-      <% @object.errors.messages.each do |k, v| %>
-      <% v.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+      <% object.errors.each do |field, messages| %>
+        <% messages = [messages] unless messages.class == Array %>
+        <% messages.each do |message| %>
+          <li><b><%= field %></b>: <%= message %></li>
+        <% end %>
       <% end %>
       </ul>
     </div>

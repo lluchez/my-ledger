@@ -29,27 +29,17 @@ class StatementRecordCategoryRules::CategoryRuleBase < ApplicationRecord
   private
     def type_should_be_valid
       if self.type.blank?
-        errors.add(:type, "Rule type is required")
+        errors.add(:type, :blank)
       elsif !self.class.types.include?(self.type)
-        errors.add(:type, "Invalid rule type")
+        errors.add(:type, :invalid)
       end
     end
 
-    def validate_specific_fields
-      if self.type == 'RegexpCategoryRule'
-        if self.pattern.present?
-          begin
-            ereg = Regexp.new(self.pattern)
-          rescue
-            errors.add(:pattern, "Invalid regular expression")
-          end
-        end
-      end
-    end
+    def validate_specific_fields; end
 
     def before_destroying
       if StatementRecord.where(:category_rule_id => self.id).any?
-        errors.add(:base, "This rule is used and cannot be removed now")
+        errors.add(:base, :cant_delete_in_use)
         throw :abort
       end
     end

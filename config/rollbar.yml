@@ -1,0 +1,4 @@
+any:
+  endpoint: "https://api.rollbar.com"
+  read_token: "f2f0d2b19de44eaeb5106c75085811f9"
+  write_token: "bfdf2ca33fba43c4b0cda3c5331d628e"

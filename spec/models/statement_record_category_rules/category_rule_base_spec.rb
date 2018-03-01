@@ -37,31 +37,6 @@ describe StatementRecordCategoryRules::CategoryRuleBase do
     end
   end
 
-  describe '#validate_specific_fields' do
-    context 'RegexpCategoryRule' do
-      let(:user) { FactoryGirl.create(:user) }
-      let(:record_category) { FactoryGirl.create(:statement_record_category, :user => user) }
-      let(:attrs) { FactoryGirl.attributes_for(:regexp_category_rule).merge(:user => user, :category_id => record_category.id) }
-
-      it 'should require a regexp to parse statement records' do
-        rule = StatementRecordCategoryRules::CategoryRuleBase.new(attrs.merge(:pattern => nil))
-        expect(rule.valid?).to eq(false)
-        expect(rule.errors[:pattern]).to eq(["Regular expression is required"])
-      end
-
-      it 'should require a valid regexp to parse statement records' do
-        rule = StatementRecordCategoryRules::CategoryRuleBase.new(attrs.merge(:pattern => '('))
-        expect(rule.valid?).to eq(false)
-        expect(rule.errors[:pattern]).to eq(["Invalid regular expression"])
-      end
-
-      it 'should accept valids regexp to parse statement records' do
-        rule = StatementRecordCategoryRules::CategoryRuleBase.new(attrs)
-        expect(rule.valid?).to eq(true)
-      end
-    end
-  end
-
   describe '#before_destroying' do
     let(:user) { FactoryGirl.create(:user) }
     let(:category) { FactoryGirl.create(:statement_record_category, :user_id => user.id) }

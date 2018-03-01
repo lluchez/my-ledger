@@ -28,7 +28,68 @@ en:
         email: "Email address"
     errors:
       models:
-        statement_record_category_rules/category_rule_base: &category_rule
+        # Use <Model>.name.underscore
+        statement_parsers/parser_base:
+          attributes:
+            base:
+              cant_delete_in_use: "This parser is used and cannot be removed now"
+            type:
+              blank: "Parser type is required"
+              invalid: "Invalid parser type"
+        statement_parsers/plain_text_parser:
+          attributes:
+            plain_text_regex:
+              blank: "Regular expression is required for Plain Text parsers"
+              invalid_regexp: "Malformed regular expression: %{err_msg}"
+              missing_group: "Missing capturing group %{group_name}"
+            plain_text_date_format:
+              blank: "Date format is required for Plain Text parsers"
+        statement_record_category_rules/category_rule_base:
+          attributes:
+            base:
+              cant_delete_in_use: "This rule is used and cannot be removed now"
+            type:
+              blank: "Rule type is required"
+              invalid: "Invalid rule type"
+        statement_record_category_rules/regexp_category_rule:
           attributes:
             pattern:
-              blank: "Regular expression is required"
+              blank: "Regular expression is required for Regexp rules"
+              invalid_regexp: "Malformed regular expression: %{err_msg}"
+        bank_statement:
+          attributes:
+            bank_account:
+              invalid: "Invalid Bank Account selected"
+            month:
+              invalid: "Invalid month selected"
+              date_taken: "There is already a statement for that date"
+            records:
+              generic_error: "Error while creating the records"
+  custom_errors:
+    plain_text_statement_parser:
+      line_format: "Unable to parse line %{line_number}"
+      missing_groups: "Missing group(s) on line %{line_number}: %{missing_groups}"
+      date_format: "Couldn't parse the date '%{date}' on line %{line_number}"
+  controllers:
+    default:
+      created: "%{type} %{name} was successfully created."
+      updated: "%{type} %{name} was successfully updated."
+      destroyed: "%{type} %{name} was successfully deleted."
+    bank_accounts_controller:
+      type: "Bank account"
+      # created: "Bank account %{name} was successfully created."
+      # updated: "Bank account %{name} was successfully updated."
+      # destroyed: "Bank account %{name} was successfully deleted."
+    bank_statements_controller:
+      type: "Bank statement"
+      # created: "Bank statement %{name} was successfully created."
+      # updated: "Bank statement %{name} was successfully updated."
+      # destroyed: "Bank statement %{name} was successfully deleted."
+    statement_parsers_controller:
+      type: "Parser"
+      # created: "Parser %{name} was successfully created."
+      # updated: "Parser %{name} was successfully updated."
+      # destroyed: "Parser %{name} was successfully deleted."
+  general:
+    login: "Please log-in first..."
+

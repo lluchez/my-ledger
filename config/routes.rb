@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   resources :bank_accounts
+  resources :bank_statements
   resources :statement_parsers
   devise_for :users, :controllers => { registrations: 'registrations' }
 

@@ -30,7 +30,7 @@ class BankAccountsController < ApplicationController
     @bank_account = BankAccount.new((account_params || {}).merge(:user_id => current_user.id))
     respond_to do |format|
       if account_params.present? && @bank_account.save
-        format.html { redirect_to @bank_account, :flash => {:notice => "Bank account #{@bank_account.name} was successfully created."} }
+        format.html { redirect_to @bank_account, :flash => {:notice => i18n_message(:created, {:name => @bank_account.name})} }
         format.json { render :show, :status => :created, :location => @bank_account }
       else
         format.html { render :new, :flash => {:error => @bank_account.errors.full_messages} }
@@ -45,7 +45,7 @@ class BankAccountsController < ApplicationController
     account_params = bank_account_params
     respond_to do |format|
       if (account_params.blank? && !account_params.nil?) || (account_params.present? && @bank_account.update(account_params))
-        format.html { redirect_to @bank_account, :flash => {:notice => "Bank account #{@bank_account.name} was successfully updated."} }
+        format.html { redirect_to @bank_account, :flash => {:notice => i18n_message(:updated, {:name => @bank_account.name})} }
         format.json { render :show, :status => :ok, :location => @bank_account }
       else
         format.html { render :edit, :flash => {:error => @bank_account.errors.full_messages} }
@@ -59,7 +59,7 @@ class BankAccountsController < ApplicationController
   def destroy
     respond_to do |format|
       if @bank_account.destroy
-        format.html { redirect_to bank_accounts_url, :flash => {:notice => "Bank account #{@bank_account.name} was successfully deleted."} }
+        format.html { redirect_to bank_accounts_url, :flash => {:notice => i18n_message(:destroyed, {:name => @bank_account.name})} }
         format.json { head :no_content }
       else
         format.html { redirect_to bank_accounts_url, :flash => {:error => @bank_account.errors.full_messages} }

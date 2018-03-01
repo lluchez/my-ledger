@@ -40,6 +40,22 @@ RSpec.describe BankAccountsController, type: :controller do
     end
   end
 
+  describe "GET #new" do
+    it "should redirect to the sign-in page when not logged-in" do
+      sign_in(nil)
+
+      get :new, params: {}
+      expect_to_redirect_log_in_page
+    end
+
+    it "should return a success response" do
+      sign_in(user)
+
+      get :new, params: {}
+      expect(response).to be_success
+    end
+  end
+
   describe "GET #show/#edit" do
     let(:owner) { FactoryGirl.create(:user) }
     let(:bank_account) { FactoryGirl.create(:bank_account, :user_id => owner.id) }

@@ -1,0 +1,32 @@
+<h1>My Bank Statement</h1>
+
+<table class="table table-manage table-responsive table-striped table-hover table-bordered table-condensed">
+  <thead>
+    <tr>
+      <th>Statement</th>
+      <th>Bank Account</th>
+      <th>Total Amount</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @bank_statements.each do |bank_statement| %>
+      <tr>
+        <td><%= link_to bank_statement.name, bank_statement %></td>
+        <td><%= bank_statement.bank_account.name %></td>
+        <td><%= number_to_currency(bank_statement.total_amount) %></td>
+        <td class="actions">
+          <%= link_to '', edit_bank_statement_path(bank_statement), class: "icon icon-edit" %>
+          <%= link_to '', bank_statement, class: "icon icon-delete", method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to new_bank_statement_path, class: "btn btn-primary pull-right" do %>
+  <i class="glyphicon glyphicon-plus"></i> New Bank Statement
+<% end %>
