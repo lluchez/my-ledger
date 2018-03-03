@@ -12,8 +12,10 @@ module MyLedger
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    config.autoload_paths += %W(
-      #{config.root}/lib
-    )
+    auto_load_dirs = Dir[
+      "#{config.root}/lib/**/"
+    ]
+    config.autoload_paths += auto_load_dirs
+    config.eager_load_paths += auto_load_dirs
   end
 end

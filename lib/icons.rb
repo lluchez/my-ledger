@@ -1,4 +1,4 @@
-module Icons
+class Icons
 
   STATEMENT_PARSER = "glyphicon glyphicon-flash"
   BANK_ACCOUNT = "glyphicon glyphicon-book"

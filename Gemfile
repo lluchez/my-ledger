@@ -5,17 +5,18 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+ruby '2.2.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.6'
+gem 'rails', '5.0.6'
 # Use Puma as the app server
-gem 'puma', '~> 3.0'
+gem 'puma', '3.11.2'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '5.0.7'
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier', '4.1.6'
 # Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
+gem 'coffee-rails', '4.2.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby# See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'bootstrap-sass'
@@ -42,8 +43,6 @@ gem 'rollbar'
 group :development, :test do
   # Use mysql as the database for Active Record
   gem 'mysql2', '>= 0.3.18', '< 0.5'
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platform: :mri
   # To detect N+1 queries
   gem 'bullet'
   # Allow debugger
@@ -56,29 +55,29 @@ end
 
 group :test do
   gem 'capybara'
-  gem 'codecov', :require => false
-  # gem 'poltergeist'
+  gem 'codecov', require: false
   # gem 'ci_reporter'
   gem 'database_cleaner'
   gem 'factory_girl_rails'
   # gem "fakeredis"
   gem 'guard-rspec', require: false
   # gem 'launchy'
-  gem 'rspec-rails'
+  # gem 'poltergeist'
   gem 'shoulda'
-  gem 'simplecov', '0.7.1', :require => false
-  gem 'webmock'
-  gem 'rspec_junit_formatter', '0.2.2'
+  gem 'simplecov', require: false
   gem 'rails-controller-testing'
+  gem 'rspec-rails'
+  gem 'rspec_junit_formatter'
+  gem 'webmock'
 end
 
 group :development do
-  # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'web-console', '>= 3.3.0'
-  gem 'listen', '>= 3.1.5'
+  gem 'listen'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'spring-watcher-listen'
+  # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
+  gem 'web-console'
 end
 
 group :production do
@@ -86,8 +85,8 @@ group :production do
   gem 'rails_12factor'  #, '0.0.2'  # Heroku needs this gem to serve static assets such as images and CSS
 end
 
+gem 'rwr-view_helpers', '~> 0.1.1'
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-gem 'rwr-view_helpers', '~> 0.1.1'
 
 gem 'wdm', '>= 0.1.0' if Gem.win_platform?
