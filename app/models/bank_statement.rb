@@ -16,6 +16,10 @@ class BankStatement < ApplicationRecord
     end
   end
 
+  def date
+    Date.new(self.year, self.month, 1)
+  end
+
   def name
     "#{Date::MONTHNAMES[month]} #{year}"
   end

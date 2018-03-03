@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
+  TABLE_CLASS = "table table-manage table-responsive table-striped table-hover table-bordered table-condensed"
+
   rescue_from ActiveRecord::RecordNotFound do |exception|
     not_found
   end

@@ -1,0 +1,36 @@
+@import "../variables";
+
+table.table-manage {
+  & > thead > tr > th {
+    background-color: $primary-background-color;
+    color: white;
+    padding: 7px;
+  }
+
+  &.centered-cols > * > tr > * {
+    text-align: center;
+  }
+
+  &.centered-except-first-col > * > tr > *:not(:first-child) {
+    text-align: center;
+  }
+
+  & > * > tr > td.actions {
+    .icon {
+      width: 20px;
+      height: 20px;
+      margin: 0 2px;
+      display: inline-block;
+      background: image-url('empty.png') no-repeat center;
+    }
+    .icon.icon-add {
+      background-image: image-url('icons/add-16x16.png');
+    }
+    .icon.icon-edit {
+      background-image: image-url('icons/edit-16x16.png');
+    }
+    .icon.icon-delete {
+      background-image: image-url('icons/trash-16x16.png');
+    }
+  }
+}

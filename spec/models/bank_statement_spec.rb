@@ -20,6 +20,13 @@ describe BankStatement do
     end
   end
 
+  describe '#date' do
+    it 'should return a date based on year and month, using 1 for day' do
+      bank_statement = BankStatement.new(:year => 1985, :month => 5)
+      expect(bank_statement.date).to eq(Date.new(1985, 5, 1))
+    end
+  end
+
   describe '#validate_bank_account' do
     context 'when the bank account belongs to the user' do
       it 'should allow the creation of the statement' do

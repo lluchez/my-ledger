@@ -1,18 +1,56 @@
-<p>
-  <strong>Name:</strong>
-  <%= @bank_account.name %>
-</p>
+<%
+  css_col_label = "col-sm-2 col-label"
+  css_col_data  = "col-sm-10"
+  if @bank_account.parser.present?
+    parser_text = link_to(@bank_account.name, statement_parser_path(@bank_account.parser))
+  end
+%>
 
-<p>
-  <strong>User:</strong>
-  <%= @bank_account.user.name %>
-</p>
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <li><%= link_to("Bank Accounts", bank_accounts_path) %></li>
+  <li class="active"><%= @bank_account.name %></li>
+</ol>
 
-<div class="actions">
-  <%= link_to edit_bank_account_path(@bank_account), :class => "btn btn-primary pull-right" do %>
-    <i class="glyphicon glyphicon-pencil"></i> Edit Bank Account
-  <% end %>
-  <%= link_to bank_accounts_path, class: "btn btn-link pull-right" do %>
-    <i class="glyphicon glyphicon-arrow-left"></i> Back to Accounts list
-  <% end %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <i class="icon <%= Icons::BANK_ACCOUNT %>"></i>
+    <%= @bank_account.name %>
+  </div>
+  <div class="panel-body">
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><span>Parser</span></div>
+        <div class="<%= css_col_data %>"><%= parser_text %></div>
+      </div>
+    </div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><span>Statements</span></div>
+        <div class="<%= css_col_data %>">
+          <table class="<%= ApplicationController::TABLE_CLASS %> centered-cols">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Total Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @bank_statements.each do |statement| %>
+                <tr>
+                  <td><%= statement.name %></td>
+                  <td><%= number_to_currency(statement.total_amount) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <%= link_to edit_bank_account_path(@bank_account), :class => "btn btn-success pull-right" do %>
+      <i class="glyphicon glyphicon-pencil"></i> Edit Bank Account
+    <% end %>
+  </div>
 </div>

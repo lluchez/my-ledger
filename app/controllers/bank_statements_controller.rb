@@ -3,8 +3,9 @@ class BankStatementsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :set_bank_statement, :only => [:show, :edit, :update, :destroy]
-  before_action :list_bank_accounts #, :only => [:new, :edit] # needs to include :create/:update as failure will not result in a redirection
-  before_action :list_months_names #, :only => [:new, :edit] # needs to include :create/:update as failure will not result in a redirection
+  before_action :list_bank_accounts, :only => [:new, :edit, :create, :update] # needs to include :create/:update as failure will not result in a redirection
+  before_action :list_months_names, :only => [:new, :edit, :create, :update] # needs to include :create/:update as failure will not result in a redirection
+  before_action :list_statement_records, :only => [:show]
 
   # GET /bank_statements
   # GET /bank_statements.json
@@ -78,6 +79,10 @@ class BankStatementsController < ApplicationController
 
     def list_bank_accounts
       @bank_accounts = BankAccount.where(:user_id => current_user.id).order(:name).map { |p| [p.name, p.id] }
+    end
+
+    def list_statement_records
+      @statement_records = StatementRecord.where(:user_id => current_user.id, :statement_id => @bank_statement.id).order('date DESC')
     end
 
     def list_months_names

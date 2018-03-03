@@ -1,7 +1,8 @@
 class BankAccountsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_bank_account, :only => [:show, :edit, :update, :destroy]
-  before_action :list_statement_parsers #, :only => [:new, :edit] # needs to include :create/:update as failure will not result in a redirection
+  before_action :list_statement_parsers, :only => [:new, :edit, :create, :update] # needs to include :create/:update as failure will not result in a redirection
+  before_action :list_bank_statements, :only => [:show]
 
   # GET /bank_accounts
   # GET /bank_accounts.json
@@ -75,6 +76,10 @@ class BankAccountsController < ApplicationController
 
     def list_statement_parsers
       @statement_parsers = StatementParsers::ParserBase.order(:name).map { |p| [p.name, p.id] }
+    end
+
+    def list_bank_statements
+      @bank_statements = BankStatement.where(:user_id => current_user.id, :bank_account_id => @bank_account.id).order('year DESC, month DESC')
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

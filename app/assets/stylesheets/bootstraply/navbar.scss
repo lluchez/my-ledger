@@ -1,0 +1,56 @@
+@import "../variables";
+
+.navbar {
+  background-color: $primary-background-color;
+  border-radius: 0;
+
+  .navbar-brand {
+    font-size: 24px;
+    color: $primary-color-with-background;
+    font-weight: bold;
+    text-shadow: 1px 2px rgba(0,0,0,0.4);
+
+    &:hover {
+      color: $primary-color-with-background;
+    }
+  }
+
+  .navbar-logo {
+    width: 32px;
+    display: inline-block;
+    margin-top: -5px;
+    padding-right: 10px;
+    box-sizing: content-box;
+  }
+
+  .navbar-nav > li > a {
+    color: $primary-color-with-background;
+  }
+}
+
+
+// small screens
+@media (max-width: 767px) {
+  .navbar {
+    .dropdown-header {
+      color: #444;
+    }
+    .navbar-toggle {
+      .icon-bar {
+        background-color: white;
+      }
+      &:hover, &:focus {
+        background-color: $primary-background-color-hover;
+      }
+    }
+    .navbar-nav > .open {
+      .dropdown-menu > li > a {
+        color: $primary-color-with-background;
+      }
+      & > a, & > a:hover, & > a:focus {
+        background-color: $primary-background-color-hover;
+        color: $primary-color-with-background;
+      }
+    }
+  }
+}

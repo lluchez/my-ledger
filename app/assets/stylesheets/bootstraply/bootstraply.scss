@@ -1,0 +1,33 @@
+@import "../variables";
+$font-size-h1: 2rem;
+$font-size-h2: 1.6rem;
+$font-size-h3: 1.2rem;
+
+// $theme-colors: (
+//   "primary": $primary-color
+// );
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+
+// find the correct way to override this values in bootstrap
+
+.btn-primary {
+  background-color: $primary-background-color;
+  border-color: $primary-background-color;
+  &:hover {
+    background-color: $primary-color-hover;
+    border-color: $primary-color-hover;
+  }
+}
+
+.panel {
+  &.panel-primary {
+    border-color: $primary-background-color;
+    & > .panel-heading {
+      color: $primary-color-with-background;
+      background-color: $primary-background-color;
+    }
+  }
+}

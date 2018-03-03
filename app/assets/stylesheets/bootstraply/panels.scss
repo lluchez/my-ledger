@@ -1,0 +1,43 @@
+@import "../variables";
+
+.panel {
+  &.panel-primary {
+    .panel-heading {
+      font-size: 1.5em;
+      padding: 5px 15px;
+    }
+  }
+
+  .col-label {
+    font-weight: bold;
+    & > span::after {
+      content: ":";
+    }
+  }
+
+  .panel-footer::after {
+    display: block;
+    content: "";
+    clear: both;
+  }
+}
+
+
+// intermediate screens
+@media (min-width: 768px) {
+  .panel {
+    margin-left: auto;
+    margin-right: auto;
+    .col-label {
+      text-align: right;
+    }
+  }
+}
+
+
+// // large screens
+// @media (min-width: 992px) {
+//   .panel.small-panel {
+//     max-width: 800px;
+//   }
+// }

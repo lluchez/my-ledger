@@ -1,18 +1,44 @@
-<p>
-  <strong>Name:</strong>
-  <%= @parser.name %>
-</p>
+<%
+  css_col_label = "col-sm-2 col-label"
+  css_col_data  = "col-sm-10"
+%>
 
-<p>
-  <strong>Type:</strong>
-  <%= @parser.type || @parser.class.to_s %>
-</p>
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <li><%= link_to("Statement Parsers", statement_parsers_path) %></li>
+  <li class="active"><%= @parser.name %></li>
+</ol>
 
-<div class="actions">
-  <%= link_to edit_statement_parser_path(@parser), :class => "btn btn-primary pull-right" do %>
-    <i class="glyphicon glyphicon-pencil"></i> Edit Statement Parser
-  <% end %>
-  <%= link_to statement_parsers_path, class: "btn btn-link pull-right" do %>
-    <i class="glyphicon glyphicon-arrow-left"></i> Back to Parsers list
-  <% end %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <i class="icon <%= Icons::STATEMENT_PARSER %>"></i>
+    <%= @parser.name %>
+  </div>
+  <div class="panel-body">
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><span>Type</span></div>
+        <div class="<%= css_col_data %>"><%= @parser.type %></div>
+      </div>
+      <%
+        if @parser.class == StatementParsers::PlainTextParser
+      %>
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><span>RegExp</span></div>
+       <div class="<%= css_col_data %>"><span class="font-pre bkgd"><%= @parser.plain_text_regex %></span></div>
+      </div>
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><span>Date format</span></div>
+        <div class="<%= css_col_data %>"><span class="font-pre bkgd"><%= @parser.plain_text_date_format %></span></div>
+      </div>
+      <%
+        end
+      %>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <%= link_to edit_statement_parser_path(@parser), :class => "btn btn-success pull-right" do %>
+      <i class="glyphicon glyphicon-pencil"></i> Edit Statement Parser
+    <% end %>
+  </div>
 </div>

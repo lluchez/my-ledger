@@ -5,7 +5,7 @@
       <% object.errors.each do |field, messages| %>
         <% messages = [messages] unless messages.class == Array %>
         <% messages.each do |message| %>
-          <li><b><%= field %></b>: <%= message %></li>
+          <li><%= message %></li>
         <% end %>
       <% end %>
       </ul>

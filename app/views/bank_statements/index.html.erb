@@ -1,6 +1,10 @@
-<h1>My Bank Statement</h1>
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <li class="active">Bank Statements</li>
+</ol>
 
-<table class="table table-manage table-responsive table-striped table-hover table-bordered table-condensed">
+
+<table class="<%= ApplicationController::TABLE_CLASS %> centered-except-first-col">
   <thead>
     <tr>
       <th>Statement</th>
@@ -14,7 +18,7 @@
     <% @bank_statements.each do |bank_statement| %>
       <tr>
         <td><%= link_to bank_statement.name, bank_statement %></td>
-        <td><%= bank_statement.bank_account.name %></td>
+        <td><%= link_to bank_statement.bank_account.name, bank_account_path(bank_statement.bank_account) %></td>
         <td><%= number_to_currency(bank_statement.total_amount) %></td>
         <td class="actions">
           <%= link_to '', edit_bank_statement_path(bank_statement), class: "icon icon-edit" %>
