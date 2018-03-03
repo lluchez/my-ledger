@@ -4,6 +4,8 @@ class StatementRecord < ApplicationRecord
   belongs_to :category, :optional => true, :class_name => StatementRecordCategory
   belongs_to :category_rule, :optional => true, class_name: StatementRecordCategoryRules::CategoryRuleBase
 
+  scope :from_user, ->(user) { where(:user_id => user.id) }
+
   validates_presence_of :user_id, :statement_id, :amount, :date, :description
 
   after_save :update_statement_total_amount_after_save

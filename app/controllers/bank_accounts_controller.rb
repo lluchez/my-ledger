@@ -7,7 +7,7 @@ class BankAccountsController < ApplicationController
   # GET /bank_accounts
   # GET /bank_accounts.json
   def index
-    @bank_accounts = BankAccount.where(:user_id => current_user.id).includes(:parser).order(:name)
+    @bank_accounts = BankAccount.from_user(current_user).includes(:parser).order(:name)
   end
 
   # GET /bank_accounts/1
@@ -71,7 +71,7 @@ class BankAccountsController < ApplicationController
 
   private
     def set_bank_account
-      @bank_account = BankAccount.where(:id => params[:id], :user_id => current_user.id).last or not_found
+      @bank_account = BankAccount.from_user(current_user).where(:id => params[:id]).last or not_found
     end
 
     def list_statement_parsers
@@ -79,7 +79,7 @@ class BankAccountsController < ApplicationController
     end
 
     def list_bank_statements
-      @bank_statements = BankStatement.where(:user_id => current_user.id, :bank_account_id => @bank_account.id).order('year DESC, month DESC')
+      @bank_statements = BankStatement.from_user(current_user).where(:bank_account_id => @bank_account.id).order('year DESC, month DESC')
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
