@@ -5,6 +5,7 @@ class StatementRecordCategory < ApplicationRecord
   has_many :records, :class_name => StatementRecord, :foreign_key => :category_id
   has_many :rules, :class_name => StatementRecordCategoryRules::CategoryRuleBase, :foreign_key => :category_id
 
+  scope :from_user, ->(user) { where(:user_id => user.id) }
   scope :active, ->{ where(:active => true) }
 
   validates_presence_of :user_id, :name

@@ -10,7 +10,7 @@ class BankStatementsController < ApplicationController
   # GET /bank_statements
   # GET /bank_statements.json
   def index
-    @bank_statements = BankStatement.where(:user_id => current_user.id).includes(:bank_account).joins(:bank_account).order('year DESC, month DESC, bank_accounts.name')
+    @bank_statements = BankStatement.from_user(current_user).includes(:bank_account).joins(:bank_account).order('year DESC, month DESC, bank_accounts.name')
   end
 
   # GET /bank_statements/1
@@ -74,15 +74,15 @@ class BankStatementsController < ApplicationController
   private
 
     def set_bank_statement
-      @bank_statement = BankStatement.where(:id => params[:id], :user_id => current_user.id).last or not_found
+      @bank_statement = BankStatement.from_user(current_user).where(:id => params[:id]).last or not_found
     end
 
     def list_bank_accounts
-      @bank_accounts = BankAccount.where(:user_id => current_user.id).order(:name).map { |p| [p.name, p.id] }
+      @bank_accounts = BankAccount.from_user(current_user).order(:name).map { |p| [p.name, p.id] }
     end
 
     def list_statement_records
-      @statement_records = StatementRecord.where(:user_id => current_user.id, :statement_id => @bank_statement.id).order('date DESC')
+      @statement_records = StatementRecord.from_user(current_user).where(:statement_id => @bank_statement.id).order('date DESC')
     end
 
     def list_months_names

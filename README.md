@@ -12,6 +12,13 @@ Work in progress.
 
 ## Notes for developer
 
+### Generate Branch Name
+```
+"<string>".downcase.gsub(/[ \:\-]+/, '_').gsub(/\W/, '').underscore
+```
+For GitHub issue, prefix by `iX-`
+For Rollbar issue, prefix by `rX-`
+
 ### Assets
 Assets are precomplied and a diggest will be appended for versionning. Check [Coding Links to Assets](http://guides.rubyonrails.org/asset_pipeline.html#coding-links-to-assets) for more details.
 - Create ab image tag: `<%= image_tag "icons/rails.png" %>`
