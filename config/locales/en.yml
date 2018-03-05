@@ -59,12 +59,23 @@ en:
         bank_statement:
           attributes:
             bank_account:
+              blank: "Bank Account is required"
               invalid: "Invalid Bank Account selected"
             month:
               invalid: "Invalid month selected"
               date_taken: "There is already a statement for that date"
             records:
               generic_error: "Error while creating the records"
+        statement_record:
+          attributes:
+            statement_id:
+              blank: "Statement is required"
+              invalid: "Invalid statement"
+            date:
+              blank: "Date is required"
+            amount:
+              blank: "Amount is required"
+
   custom_errors:
     plain_text_statement_parser:
       line_format: "Unable to parse line %{line_number}"
@@ -77,19 +88,12 @@ en:
       destroyed: "%{type} %{name} was successfully deleted."
     bank_accounts_controller:
       type: "Bank account"
-      # created: "Bank account %{name} was successfully created."
-      # updated: "Bank account %{name} was successfully updated."
-      # destroyed: "Bank account %{name} was successfully deleted."
     bank_statements_controller:
       type: "Bank statement"
-      # created: "Bank statement %{name} was successfully created."
-      # updated: "Bank statement %{name} was successfully updated."
-      # destroyed: "Bank statement %{name} was successfully deleted."
     statement_parsers_controller:
       type: "Parser"
-      # created: "Parser %{name} was successfully created."
-      # updated: "Parser %{name} was successfully updated."
-      # destroyed: "Parser %{name} was successfully deleted."
+    statement_records_controller:
+      type: "Transaction"
   general:
     login: "Please log-in first..."
 

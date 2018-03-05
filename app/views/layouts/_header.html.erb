@@ -30,6 +30,10 @@
 								<i class="<%= Icons::BANK_STATEMENT %>"></i>
 								Bank Statements
 							<% end	%></li>
+							<li><%= link_to(statement_records_path) do %>
+								<i class="<%= Icons::STATEMENT_RECORD %>"></i>
+								Transactions
+							<% end	%></li>
 							<li role="separator" class="divider"></li>
 							<li class="dropdown-header">Settings</li>
 							<li><%= link_to(statement_parsers_path) do %>

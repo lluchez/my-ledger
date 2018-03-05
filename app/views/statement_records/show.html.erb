@@ -1,0 +1,66 @@
+<%
+  css_col_label = "col-sm-2 col-label"
+  css_col_data  = "col-sm-10"
+  bank_statement_text = link_to(@statement_record.statement.name, bank_statement_path(@statement_record.statement))
+  bank_account_text = link_to(@statement_record.bank_account.name, bank_account_path(@statement_record.bank_account))
+  if @bank_statement.present?
+    transactions_link = bank_statement_statement_records_path(@bank_statement)
+    edit_btn_link = edit_bank_statement_statement_record_path(@bank_statement, @statement_record)
+  else
+    transactions_link = statement_records_path
+    edit_btn_link = edit_statement_record_path(@statement_record)
+  end
+%>
+
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <% if @bank_statement.present? %>
+    <li><%= link_to(@bank_statement.name, @bank_statement) %></li>
+  <% end %>
+  <li><%= link_to("Transactions", transactions_link) %></li>
+  <li class="active"><%= @statement_record.name %></li>
+</ol>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <i class="icon <%= Icons::STATEMENT_RECORD %>"></i>
+    <%= @statement_record.name %>
+  </div>
+  <div class="panel-body">
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><span>Bank Account</span></div>
+        <div class="<%= css_col_data %>"><%= bank_account_text %></div>
+      </div>
+    </div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><span>Statement</span></div>
+        <div class="<%= css_col_data %>"><%= bank_statement_text %></div>
+      </div>
+    </div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><span>Date</span></div>
+        <div class="<%= css_col_data %>"><%= @statement_record.date %></div>
+      </div>
+    </div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><span>Description</span></div>
+        <div class="<%= css_col_data %>"><%= @statement_record.description %></div>
+      </div>
+    </div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><span>Amount</span></div>
+        <div class="<%= css_col_data %>"><%= number_to_currency(@statement_record.amount) %></div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <%= link_to(edit_btn_link, :class => "btn btn-success pull-right") do %>
+      <i class="glyphicon glyphicon-pencil"></i> Edit Transaction
+    <% end %>
+  </div>
+</div>

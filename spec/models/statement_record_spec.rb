@@ -6,6 +6,7 @@ describe StatementRecord do
   it { should belong_to(:statement) }
   it { should belong_to(:category) }
   it { should belong_to(:category_rule) }
+  it { should have_one(:bank_account) }
 
   it { should validate_presence_of(:user_id) }
   it { should validate_presence_of(:statement_id) }

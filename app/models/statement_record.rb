@@ -3,6 +3,7 @@ class StatementRecord < ApplicationRecord
   belongs_to :statement, :validate => true, :class_name => BankStatement
   belongs_to :category, :optional => true, :class_name => StatementRecordCategory
   belongs_to :category_rule, :optional => true, class_name: StatementRecordCategoryRules::CategoryRuleBase
+  has_one :bank_account, :through => :statement
 
   scope :from_user, ->(user) { where(:user_id => user.id) }
 
@@ -10,6 +11,8 @@ class StatementRecord < ApplicationRecord
 
   after_save :update_statement_total_amount_after_save
   after_destroy :update_statement_total_amount_after_destroy
+
+  alias_attribute :name, :description
 
   def update_statement_total_amount_after_save
     if id_changed?

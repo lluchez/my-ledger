@@ -38,7 +38,7 @@
             <tbody>
               <% @bank_statements.each do |statement| %>
                 <tr>
-                  <td><%= statement.name %></td>
+                  <td><%= link_to(statement.name, statement) %></td>
                   <td><%= number_to_currency(statement.total_amount) %></td>
                 </tr>
               <% end %>

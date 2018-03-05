@@ -1,6 +1,6 @@
 <%
   type = "Bank Account"
-  is_editing = bank_account.id
+  is_editing = bank_account.id.present?
   title = is_editing ? "Editing #{bank_account.name}" : "New #{type}"
   submit_btn = is_editing ? "Update" : "Create"
   glyphicon = "glyphicon #{is_editing ? 'glyphicon-pencil' : 'glyphicon-plus'}"

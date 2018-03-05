@@ -23,7 +23,7 @@
 }
 
 
-// intermediate screens
+// intermediate screens and larger
 @media (min-width: 768px) {
   .panel {
     margin-left: auto;
@@ -33,11 +33,3 @@
     }
   }
 }
-
-
-// // large screens
-// @media (min-width: 992px) {
-//   .panel.small-panel {
-//     max-width: 800px;
-//   }
-// }

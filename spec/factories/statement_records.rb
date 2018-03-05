@@ -6,11 +6,10 @@ FactoryGirl.define do
     statement { FactoryGirl.create(:bank_statement) }
     amount 1 + Random.rand(300) + (Random.rand(10) / 10.0)
     date Date.today
-    # description "Description"
     sequence(:description) { |n| "Description #{n}" }
 
     after(:build) do |statement_record|
-      statement_record.user = statement_record.statement.user
+      statement_record.user = statement_record.statement.user if statement_record.user.nil?
     end
 
     trait :with_record_category do

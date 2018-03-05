@@ -7,12 +7,20 @@ table.table-manage {
     padding: 7px;
   }
 
-  &.centered-cols > * > tr > * {
+  &.centered-cols > * > tr > *, &.centered-except-first-col > * > tr > *:not(:first-child) {
     text-align: center;
   }
 
-  &.centered-except-first-col > * > tr > *:not(:first-child) {
-    text-align: center;
+  & > * > tr > * {
+    &.centered {
+      text-align: center !important;
+    }
+    &.left-aligned {
+      text-align: left !important;
+    }
+    &.right-aligned {
+      text-align: right !important;
+    }
   }
 
   & > * > tr > td.actions {

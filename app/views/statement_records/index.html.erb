@@ -1,0 +1,48 @@
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <% if @bank_statement.present? %>
+    <li><%= link_to(@bank_statement.name, bank_statement_path(@bank_statement)) %></li>
+  <% end %>
+  <li class="active">Transactions</li>
+</ol>
+
+
+<table class="<%= ApplicationController::TABLE_CLASS %> centered-except-first-col">
+  <thead>
+    <tr>
+      <th class="left-aligned">Description</th>
+      <th>Date</th>
+      <th>Amount</th>
+      <% if @bank_statement.blank? %>
+        <th>Statement</th>
+        <th>Bank Account</th>
+      <% end %>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @statement_records.each do |record| %>
+      <% record_link = @bank_statement.present? ? bank_statement_statement_record_path(@bank_statement, record) : record %>
+      <tr>
+        <td class="left-aligned"><%= link_to(record.description, record_link) %></td>
+        <td><%= record.date %></td>
+        <td><%= number_to_currency(record.amount) %></td>
+        <% if @bank_statement.blank? %>
+          <td><%= link_to(record.statement.name, bank_statement_path(record.statement)) %></td>
+          <td><%= link_to(record.statement.bank_account.name, bank_account_path(record.statement.bank_account)) %></td>
+        <% end %>
+        <td class="actions">
+          <%= link_to('', edit_statement_record_path(record), class: "icon icon-edit") %>
+          <%= link_to('', record, class: "icon icon-delete", method: :delete, data: { confirm: 'Are you sure?' }) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to(new_statement_record_path, class: "btn btn-primary pull-right") do %>
+  <i class="glyphicon glyphicon-plus"></i> New Transactions
+<% end %>

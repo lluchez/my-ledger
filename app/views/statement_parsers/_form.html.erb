@@ -1,6 +1,6 @@
 <%
   type = "Statement Parser"
-  is_editing = statement_parser.id
+  is_editing = statement_parser.id.present?
   title = is_editing ? "Editing #{statement_parser.name}" : "New #{type}"
   form_url = {:controller => "statement_parsers", :action => is_editing ? 'update' : 'create'}
   form_html_opts = {:class => "form-horizontal", :data_type => "form-statement-parser"}
