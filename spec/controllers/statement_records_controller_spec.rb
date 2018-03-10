@@ -4,10 +4,11 @@ RSpec.describe StatementRecordsController, type: :controller do
   render_views
 
   let(:param_key) { :statement_record }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   describe "GET #index" do
-    let!(:statement_record) { FactoryGirl.create(:statement_record, :user_id => user.id) }
+    let!(:statement_record) { FactoryBot.create(:statement_record, :user_id => user.id) }
+    let!(:other_statement_record) { FactoryBot.create(:statement_record) }
 
     it "should redirect to the sign-in page when not logged-in" do
       sign_in(nil)
@@ -23,9 +24,24 @@ RSpec.describe StatementRecordsController, type: :controller do
       expect(response).to be_success
     end
 
+    it "should return a success JSON response" do
+      sign_in(user)
+
+      get :index, params: {}, format: :json
+      expect(response).to be_success
+
+      data = JSON.parse(response.body)
+      expect(data.count).to eq(1)
+      ids = data.map{ |o| o["id"] }
+      expect(ids).to include(statement_record.id)
+      expect(ids).to_not include(other_statement_record.id)
+      assert_json_statement_record(data.first, statement_record)
+      expect(data.first["statement_name"]).to eq(statement_record.statement.name)
+    end
+
     it "should return a 404 response when providing an incorrect bank statement ID" do
       sign_in(user)
-      bank_statement = FactoryGirl.create(:bank_statement)
+      bank_statement = FactoryBot.create(:bank_statement)
 
       get :index, params: {:bank_statement_id => bank_statement.id}
       expect_to_render_404
@@ -33,7 +49,7 @@ RSpec.describe StatementRecordsController, type: :controller do
 
     it "should return a success response when providing a valid bank statement ID" do
       sign_in(user)
-      bank_statement = FactoryGirl.create(:bank_statement, :user_id => user.id)
+      bank_statement = FactoryBot.create(:bank_statement, :user_id => user.id)
 
       get :index, params: {:bank_statement_id => bank_statement.id}
       expect(response).to be_success
@@ -57,9 +73,8 @@ RSpec.describe StatementRecordsController, type: :controller do
   end
 
   describe "GET #show/#edit" do
-    let(:owner) { FactoryGirl.create(:user) }
-    let(:bank_statement) { FactoryGirl.create(:bank_statement, :user_id => owner.id) }
-    let(:statement_record) { FactoryGirl.create(:statement_record, :user_id => owner.id, :statement_id => bank_statement.id) }
+    let(:owner) { FactoryBot.create(:user) }
+    let(:statement_record) { FactoryBot.create(:statement_record, :user_id => owner.id) }
 
     it "should redirect to the sign-in page when not logged-in" do
       sign_in(nil)
@@ -97,9 +112,18 @@ RSpec.describe StatementRecordsController, type: :controller do
       end
     end
 
+    it "should return a success JSON response" do
+      sign_in(owner)
+
+      get :show, params: {:id => statement_record.id}, format: :json
+      expect(response).to be_success
+
+      assert_json_statement_record(hash_from_json_body, statement_record)
+    end
+
     it "should return a 404 response when providing an incorrect bank statement ID" do
       sign_in(owner)
-      other_statement = FactoryGirl.create(:bank_statement)
+      other_statement = FactoryBot.create(:bank_statement)
 
       [:show, :edit].each do |method|
         get method, params: {:id => statement_record.id, :bank_statement_id => other_statement.id}
@@ -118,7 +142,7 @@ RSpec.describe StatementRecordsController, type: :controller do
   end
 
   describe "POST #create" do
-    let(:bank_statement) { FactoryGirl.create(:bank_statement, :user_id => user.id) } # can be removed once factory for statement_record is fixed
+    let(:bank_statement) { FactoryBot.create(:bank_statement, :user_id => user.id) }
     let(:statement_record_attrs) do
       {
         :statement_id => bank_statement.id,
@@ -159,7 +183,7 @@ RSpec.describe StatementRecordsController, type: :controller do
     it "should not allow to associate a statement record to a bank statement belonging to another user" do
       sign_in(user)
 
-      other_statement = FactoryGirl.create(:bank_statement)
+      other_statement = FactoryBot.create(:bank_statement)
       attrs = statement_record_attrs.merge(:statement_id => other_statement.id)
       expect {
         post :create, params: {param_key => attrs}
@@ -178,7 +202,6 @@ RSpec.describe StatementRecordsController, type: :controller do
       # expect(flash[:error]).to be_present
     end
 
-
     it "should create the statement record and returns a success response" do
       sign_in(user)
 
@@ -188,12 +211,22 @@ RSpec.describe StatementRecordsController, type: :controller do
       expect(response).to redirect_to(statement_record_url(assigns[:statement_record]))
       # expect(flash[:notice]).to be_present
     end
+
+    it "should create the bank record and returns a success JSON response" do
+      sign_in(user)
+
+      expect {
+        post :create, params: {param_key => statement_record_attrs}, format: :json
+        expect(response).to be_success
+      }.to change { user.statement_records.count }.by(1)
+
+      assert_json_statement_record(hash_from_json_body, assigns[:statement_record])
+    end
   end
 
   describe "PUT #update" do
-    let(:bank_statement) { FactoryGirl.create(:bank_statement, :user => user) } # can be removed once factory for statement_record is fixed
-    let(:my_statement_record) { FactoryGirl.create(:statement_record, :user => user, :statement => bank_statement) }
-    let(:other_statement_record) { FactoryGirl.create(:statement_record) }
+    let(:my_statement_record) { FactoryBot.create(:statement_record, :user => user) }
+    let(:other_statement_record) { FactoryBot.create(:statement_record) }
 
     it "should redirect to the sign-in page when not logged-in" do
       sign_in(nil)
@@ -240,7 +273,7 @@ RSpec.describe StatementRecordsController, type: :controller do
 
     it "should not allow to associate a statement record to a bank statement belonging to another user" do
       sign_in(user)
-      other_statement = FactoryGirl.create(:bank_statement)
+      other_statement = FactoryBot.create(:bank_statement)
 
       expect {
         put :update, params: {:id => my_statement_record.id, param_key => {:amount => 9.99, :statement_id => other_statement.id}}
@@ -260,6 +293,19 @@ RSpec.describe StatementRecordsController, type: :controller do
       expect(flash[:notice]).to be_present
     end
 
+    it "update the bank record and returns a success JSON response" do
+      sign_in(user)
+      new_amount = 9.99
+
+      expect {
+        put :update, params: {:id => my_statement_record.id, param_key => {:amount => new_amount}}, format: :json
+        expect(response).to be_success
+      }.to change { my_statement_record.reload.amount }.to(new_amount)
+
+      json = assert_json_statement_record(hash_from_json_body, my_statement_record.reload)
+      expect(json[:amount]).to eq(new_amount)
+    end
+
     it "update the statement record, returns a success response and redirect to the correct page" do
       sign_in(user)
       new_amount = 9.99
@@ -274,9 +320,7 @@ RSpec.describe StatementRecordsController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    let(:bank_statement) { FactoryGirl.create(:bank_statement, :user => user) } # can be removed once factory for statement_record is fixed
-    let!(:my_statement_record) { FactoryGirl.create(:statement_record, :user => user, :statement => bank_statement) }
-    let!(:other_statement_record) { FactoryGirl.create(:statement_record) }
+    let!(:my_statement_record) { FactoryBot.create(:statement_record, :user => user) }
 
     it "should redirect to the sign-in page when not logged-in" do
       sign_in(nil)
@@ -299,6 +343,7 @@ RSpec.describe StatementRecordsController, type: :controller do
     it "should return a 404 response when trying to delete someone else's statement record" do
       sign_in(user)
 
+      other_statement_record = FactoryBot.create(:statement_record)
       expect {
         delete :destroy, params: {:id => other_statement_record.id}
       }.to_not change { StatementRecord.count }
@@ -326,9 +371,20 @@ RSpec.describe StatementRecordsController, type: :controller do
       expect(flash[:notice]).to be_present
     end
 
+    it "should delete the statement of that user and return an empty JSON response" do
+      sign_in(user)
+
+      expect {
+        delete :destroy, params: {:id => my_statement_record.id}, format: :json
+        expect(response).to be_success
+      }.to change { StatementRecord.count }.by(-1)
+
+      expect(response.body).to be_blank
+    end
+
     it "should not delete the statement record when providing an invalid bank statement ID" do
       sign_in(user)
-      other_statement = FactoryGirl.create(:bank_statement)
+      other_statement = FactoryBot.create(:bank_statement)
 
       expect {
         delete :destroy, params: {:id => my_statement_record.id, :bank_statement_id => other_statement.id}

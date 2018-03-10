@@ -1,4 +1,6 @@
 <%
+  css_col_label = "col-md-3 control-label"
+  css_col_input = "col-md-9"
   type = "Transaction"
   is_editing = statement_record.id.present?
   title = is_editing ? "Editing #{statement_record.name}" : "New #{type}"
@@ -29,8 +31,8 @@
       <%= render :partial => "layouts/form_errors_panel", :locals => {:object => statement_record} %>
 
       <div class="form-group">
-        <%= f.label :statement_id, "Statement:", class: "col-md-4 control-label" %>
-        <div class="col-md-8">
+        <%= f.label :statement_id, "Statement:", class: css_col_label %>
+        <div class="<%= css_col_input %>">
           <%= f.select :statement_id,
             option_groups_from_collection_for_select(@bank_accounts, :statements, :name, :id, :name, statement_record.statement_id),
             {:prompt => "<Statement>"},
@@ -40,22 +42,22 @@
       </div>
 
       <div class="form-group">
-        <%= f.label :date, "Date:", class: "col-md-4 control-label" %>
-        <div class="col-md-8">
+        <%= f.label :date, "Date:", class: css_col_label %>
+        <div class="<%= css_col_input %>">
           <%= f.text_field :date, class: "form-control", :autocomplete => :off, :placeholder => 'YYYY-MM-DD', :required => true %>
         </div>
       </div>
 
       <div class="form-group">
-        <%= f.label :description, "Description:", class: "col-md-4 control-label" %>
-        <div class="col-md-8">
+        <%= f.label :description, "Description:", class: css_col_label %>
+        <div class="<%= css_col_input %>">
           <%= f.text_field :description, class: "form-control", :autocomplete => :off, :required => true %>
         </div>
       </div>
 
       <div class="form-group">
-        <%= f.label :amount, "Amount:", class: "col-md-4 control-label" %>
-        <div class="col-md-8">
+        <%= f.label :amount, "Amount:", class: css_col_label %>
+        <div class="<%= css_col_input %>">
           <%= f.text_field :amount, class: "form-control", :autocomplete => :off, :required => true %>
         </div>
       </div>

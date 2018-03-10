@@ -20,25 +20,25 @@
   <div class="panel-body">
     <div class="form-horizontal">
       <div class="form-group">
-        <div class="<%= css_col_label %>"><span>Period</span></div>
+        <div class="<%= css_col_label %>"><label>Period</label></div>
         <div class="<%= css_col_data %>"><%= @bank_statement.name %></div>
       </div>
     </div>
     <div class="form-horizontal">
       <div class="form-group">
-        <div class="<%= css_col_label %>"><span>Bank Account</span></div>
+        <div class="<%= css_col_label %>"><label>Bank Account</label></div>
         <div class="<%= css_col_data %>"><%= bank_account_text %></div>
       </div>
     </div>
     <div class="form-horizontal">
       <div class="form-group">
-        <div class="<%= css_col_label %>"><span>Total amount</span></div>
+        <div class="<%= css_col_label %>"><label>Total amount</label></div>
         <div class="<%= css_col_data %>"><%= number_to_currency(@bank_statement.total_amount) %></div>
       </div>
     </div>
     <div class="form-horizontal">
       <div class="form-group">
-        <div class="<%= css_col_label %>"><span>Transactions</span></div>
+        <div class="<%= css_col_label %>"><label>Transactions</label></div>
         <div class="<%= css_col_data %>">
           <table class="<%= ApplicationController::TABLE_CLASS %> centered-except-first-col">
             <thead>
@@ -68,8 +68,11 @@
     </div>
   </div>
   <div class="panel-footer">
-    <%= link_to edit_bank_statement_path(@bank_statement), :class => "btn btn-success pull-right" do %>
+    <%= link_to(edit_bank_statement_path(@bank_statement), :class => "btn btn-success pull-right") do %>
       <i class="glyphicon glyphicon-pencil"></i> Edit Statement
+    <% end %>
+    <%= link_to(bank_statement_path(@bank_statement), :class => "btn btn-danger pull-right", method: :delete, data: { confirm: 'Are you sure?' }) do %>
+      <i class="glyphicon glyphicon-trash"></i> Delete
     <% end %>
   </div>
 </div>

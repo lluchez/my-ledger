@@ -30,8 +30,8 @@ describe BankStatement do
   describe '#validate_bank_account' do
     context 'when the bank account belongs to the user' do
       it 'should allow the creation of the statement' do
-        user = FactoryGirl.create(:user)
-        bank_account = FactoryGirl.create(:bank_account, :user_id => user.id)
+        user = FactoryBot.create(:user)
+        bank_account = FactoryBot.create(:bank_account, :user_id => user.id)
         statement = BankStatement.new(:bank_account_id => bank_account.id, :user_id => user.id, :month => 1, :year => 2000)
         expect(statement.valid?).to be(true)
       end
@@ -39,8 +39,8 @@ describe BankStatement do
 
     context 'when the bank account does not belong to the user' do
       it 'should not allow to add/update a statement' do
-        bank_account = FactoryGirl.create(:bank_account)
-        other_user = FactoryGirl.create(:user)
+        bank_account = FactoryBot.create(:bank_account)
+        other_user = FactoryBot.create(:user)
         statement = BankStatement.new(:bank_account_id => bank_account.id, :user_id => other_user.id, :month => 1, :year => 2000)
         expect(statement.valid?).to be(false)
         expect_to_have_error(statement, :bank_account, :invalid)

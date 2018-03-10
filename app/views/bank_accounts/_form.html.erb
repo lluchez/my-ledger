@@ -1,4 +1,6 @@
 <%
+  css_col_label = "col-md-4 control-label"
+  css_col_input = "col-md-8"
   type = "Bank Account"
   is_editing = bank_account.id.present?
   title = is_editing ? "Editing #{bank_account.name}" : "New #{type}"
@@ -20,15 +22,15 @@
     <div class="panel-body">
       <%= render :partial => "layouts/form_errors_panel", :locals => {:object => bank_account} %>
       <div class="form-group">
-        <%= f.label :name, "Account name:", class: "col-md-4 control-label" %>
-        <div class="col-md-8">
+        <%= f.label :name, "Account name:", class: css_col_label %>
+        <div class="<%= css_col_input %>">
           <%= f.text_field :name, class: "form-control", :required => true %>
         </div>
       </div>
 
       <div class="form-group">
-        <%= f.label :statement_parser_id, "Statement parser:", class: "col-md-4 control-label" %>
-        <div class="col-md-8">
+        <%= f.label :statement_parser_id, "Statement parser:", class: css_col_label %>
+        <div class="<%= css_col_input %>">
           <%= f.select :statement_parser_id,
             options_for_select(@statement_parsers, bank_account.statement_parser_id),
             {:prompt => "<Select a Statement Parser>"},

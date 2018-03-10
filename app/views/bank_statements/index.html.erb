@@ -17,12 +17,12 @@
   <tbody>
     <% @bank_statements.each do |bank_statement| %>
       <tr>
-        <td><%= link_to bank_statement.name, bank_statement %></td>
-        <td><%= link_to bank_statement.bank_account.name, bank_account_path(bank_statement.bank_account) %></td>
+        <td><%= link_to(bank_statement.name, bank_statement) %></td>
+        <td><%= link_to(bank_statement.bank_account.name, bank_account_path(bank_statement.bank_account)) %></td>
         <td><%= number_to_currency(bank_statement.total_amount) %></td>
         <td class="actions">
-          <%= link_to '', edit_bank_statement_path(bank_statement), class: "icon icon-edit" %>
-          <%= link_to '', bank_statement, class: "icon icon-delete", method: :delete, data: { confirm: 'Are you sure?' } %>
+          <%= link_to('', edit_bank_statement_path(bank_statement), class: "icon icon-edit") %>
+          <%= link_to('', bank_statement, class: "icon icon-delete", method: :delete, data: { confirm: 'Are you sure?' }) %>
         </td>
       </tr>
     <% end %>
@@ -31,6 +31,6 @@
 
 <br>
 
-<%= link_to new_bank_statement_path, class: "btn btn-primary pull-right" do %>
+<%= link_to(new_bank_statement_path, class: "btn btn-primary pull-right") do %>
   <i class="glyphicon glyphicon-plus"></i> New Bank Statement
 <% end %>

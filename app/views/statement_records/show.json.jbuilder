@@ -1,0 +1,1 @@
+json.partial! "statement_records/statement_record", statement_record: @statement_record

@@ -20,13 +20,13 @@
   <div class="panel-body">
     <div class="form-horizontal">
       <div class="form-group">
-        <div class="<%= css_col_label %>"><span>Parser</span></div>
+        <div class="<%= css_col_label %>"><label>Parser</label></div>
         <div class="<%= css_col_data %>"><%= parser_text %></div>
       </div>
     </div>
     <div class="form-horizontal">
       <div class="form-group">
-        <div class="<%= css_col_label %>"><span>Statements</span></div>
+        <div class="<%= css_col_label %>"><label>Statements</label></div>
         <div class="<%= css_col_data %>">
           <table class="<%= ApplicationController::TABLE_CLASS %> centered-cols">
             <thead>
@@ -49,8 +49,11 @@
     </div>
   </div>
   <div class="panel-footer">
-    <%= link_to edit_bank_account_path(@bank_account), :class => "btn btn-success pull-right" do %>
+    <%= link_to(edit_bank_account_path(@bank_account), :class => "btn btn-success pull-right") do %>
       <i class="glyphicon glyphicon-pencil"></i> Edit Bank Account
+    <% end %>
+    <%= link_to(bank_account_path(@bank_account), :class => "btn btn-danger pull-right", method: :delete, data: { confirm: 'Are you sure?' }) do %>
+      <i class="glyphicon glyphicon-trash"></i> Delete
     <% end %>
   </div>
 </div>

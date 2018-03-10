@@ -12,7 +12,7 @@ describe StatementParsers::ParserBase do
   describe '#type' do
     context 'missing type' do
       it 'model should be invalid' do
-        parser = FactoryGirl.build(:base_parser, :type => nil)
+        parser = FactoryBot.build(:base_parser, :type => nil)
         expect(parser.valid?).to eq(false)
         expect_to_have_error(parser, :type, :blank)
       end
@@ -20,7 +20,7 @@ describe StatementParsers::ParserBase do
 
     context 'invalid type' do
       it 'model should be invalid' do
-        parser = FactoryGirl.build(:base_parser, :type => 'UnknownParser')
+        parser = FactoryBot.build(:base_parser, :type => 'UnknownParser')
         expect(parser.valid?).to eq(false)
         expect_to_have_error(parser, :type, :invalid)
       end
@@ -28,7 +28,7 @@ describe StatementParsers::ParserBase do
 
     context 'type' do
       it 'model should be valid' do
-        parser = FactoryGirl.build(:plain_text_parser)
+        parser = FactoryBot.build(:plain_text_parser)
         expect(parser.valid?).to eq(true)
       end
     end
@@ -48,15 +48,15 @@ describe StatementParsers::ParserBase do
 
   describe '#before_destroying' do
     it 'should prevent deletion of a parser if linked to a bank account' do
-      user = FactoryGirl.create(:user)
-      parser = FactoryGirl.create(:plain_text_parser)
-      account = FactoryGirl.create(:bank_account, :statement_parser_id => parser.id, :user_id => user.id)
+      user = FactoryBot.create(:user)
+      parser = FactoryBot.create(:plain_text_parser)
+      account = FactoryBot.create(:bank_account, :statement_parser_id => parser.id, :user_id => user.id)
       expect {
         parser.destroy
       }.to_not change { StatementParsers::ParserBase.count }
     end
     it 'should allow deletion of a parser not linked to any bank account' do
-      parser = FactoryGirl.create(:plain_text_parser)
+      parser = FactoryBot.create(:plain_text_parser)
       expect {
         parser.destroy
       }.to change { StatementParsers::ParserBase.count }.by(-1)

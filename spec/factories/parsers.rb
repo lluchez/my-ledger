@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :base_parser, :class => StatementParsers::ParserBase do
     factory :plain_text_parser, :class => StatementParsers::PlainTextParser do
       type 'PlainTextParser'

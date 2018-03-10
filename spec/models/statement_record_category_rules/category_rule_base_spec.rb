@@ -19,8 +19,8 @@ describe StatementRecordCategoryRules::CategoryRuleBase do
 
   describe '#active' do
     it 'should only return active rules' do
-      rule_active = FactoryGirl.create(:text_category_rule)
-      rule_disabled = FactoryGirl.create(:text_category_rule, :active => false)
+      rule_active = FactoryBot.create(:text_category_rule)
+      rule_disabled = FactoryBot.create(:text_category_rule, :active => false)
       expect(StatementRecordCategoryRules::CategoryRuleBase.active).to eq([rule_active])
     end
   end
@@ -38,18 +38,18 @@ describe StatementRecordCategoryRules::CategoryRuleBase do
   end
 
   describe '#before_destroying' do
-    let(:user) { FactoryGirl.create(:user) }
-    let(:category) { FactoryGirl.create(:statement_record_category, :user_id => user.id) }
+    let(:user) { FactoryBot.create(:user) }
+    let(:category) { FactoryBot.create(:statement_record_category, :user_id => user.id) }
 
     it 'should prevent deletion of a rule if linked to a statement record' do
-      rule = FactoryGirl.create(:regexp_category_rule, :user_id => user.id)
-      record = FactoryGirl.create(:statement_record, :category_rule_id => rule.id, :user_id => user.id, :category_id => category.id)
+      rule = FactoryBot.create(:regexp_category_rule, :user_id => user.id)
+      record = FactoryBot.create(:statement_record, :category_rule_id => rule.id, :user_id => user.id, :category_id => category.id)
       expect {
         rule.destroy
       }.to_not change { StatementRecordCategoryRules::CategoryRuleBase.count }
     end
     it 'should allow deletion of a rule not linked to any statement record' do
-      rule = FactoryGirl.create(:regexp_category_rule, :user_id => user.id)
+      rule = FactoryBot.create(:regexp_category_rule, :user_id => user.id)
       expect {
         rule.destroy
       }.to change { StatementRecordCategoryRules::CategoryRuleBase.count }.by(-1)

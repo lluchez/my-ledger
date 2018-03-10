@@ -19,4 +19,9 @@ module ControllerHelpers
     expect(response.status).to eq(404)
     expect(response).to render_template(:file => "#{Rails.root}/app/views/errors/404.html.erb")
   end
+
+  def hash_from_json_body
+    return nil unless response
+    HashWithIndifferentAccess.new(JSON.parse(response.body))
+  end
 end

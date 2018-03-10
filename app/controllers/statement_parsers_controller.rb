@@ -31,14 +31,13 @@ class StatementParsersController < ApplicationController
   def create
     parser_params = statement_params
     @parser = StatementParsers::ParserBase.new(parser_params || {})
-    respond_to do |format|
-      if parser_params.present? && @parser.save
+    if parser_params.present? && @parser.save
+      respond_to do |format|
         format.html { redirect_to statement_parsers_url, :flash => {:notice => i18n_message(:created, {:name => @parser.name}) } }
-        format.json { render :show, :status => :created, location: @parser }
-      else
-        format.html { render :new, :flash => {:error => @parser.errors.full_messages}, :status => :unprocessable_entity }
-        format.json { render :json => @parser.errors, :status => :unprocessable_entity }
+        format.json { render :show, :status => :created, location: statement_parser_url(@parser) }
       end
+    else
+      on_error(@parser, :new)
     end
   end
 
@@ -46,28 +45,26 @@ class StatementParsersController < ApplicationController
   # PATCH/PUT /statement_parsers/1.json
   def update
     parser_params = statement_params
-    respond_to do |format|
-      if (parser_params.blank? && !parser_params.nil?) || (parser_params.present? && @parser.update(parser_params))
+    if (parser_params.blank? && !parser_params.nil?) || (parser_params.present? && @parser.update_attributes(parser_params))
+      respond_to do |format|
         format.html { redirect_to statement_parsers_url, :flash => {:notice => i18n_message(:updated, {:name => @parser.name})} }
-        format.json { render :show, :status => :ok, :location => @parser }
-      else
-        format.html { render :edit, :flash => {:error => @parser.errors.full_messages} }
-        format.json { render :json => @parser.errors, :status => :unprocessable_entity }
+        format.json { render :show, :status => :ok, :location => statement_parser_url(@parser) }
       end
+    else
+      on_error(@parser, :edit)
     end
   end
 
   # DELETE /statement_parsers/1
   # DELETE /statement_parsers/1.json
   def destroy
-    respond_to do |format|
-      if @parser.destroy
+    if @parser.destroy
+      respond_to do |format|
         format.html { redirect_to statement_parsers_url, :flash => {:notice => i18n_message(:destroyed, {:name => @parser.name})} }
         format.json { head :no_content }
-      else
-        format.html { redirect_to statement_parser_url(@parser), :flash => {:error => @parser.errors.full_messages} }
-        format.json { render :json => @parser.errors, :status => :unprocessable_entity }
       end
+    else
+      on_error(@parser, statement_parser_url(@parser), true)
     end
   end
 

@@ -1,11 +1,11 @@
 class BankStatementsController < ApplicationController
-  NB_YEARS = 10
-
   before_action :authenticate_user!
   before_action :set_bank_statement, :only => [:show, :edit, :update, :destroy]
   before_action :list_bank_accounts, :only => [:new, :edit, :create, :update] # needs to include :create/:update as failure will not result in a redirection
   before_action :list_months_names, :only => [:new, :edit, :create, :update] # needs to include :create/:update as failure will not result in a redirection
   before_action :list_statement_records, :only => [:show]
+
+  NB_YEARS = 10
 
   # GET /bank_statements
   # GET /bank_statements.json
@@ -31,14 +31,13 @@ class BankStatementsController < ApplicationController
     statement_params = bank_statement_params || {}
     @bank_statement = BankStatement.new(statement_params.merge(:user_id => current_user.id))
     records_attributes = compute_records_attributes
-    respond_to do |format|
-      if statement_params.present? && create_bank_statement_and_records(records_attributes)
+    if statement_params.present? && create_bank_statement_and_records(records_attributes)
+      respond_to do |format|
         format.html { redirect_to @bank_statement, :flash => {:notice => i18n_message(:created, {:name => @bank_statement.name})} }
         format.json { render :show, :status => :created, :location => @bank_statement }
-      else
-        format.html { render :new, :flash => {:error => @bank_statement.errors.full_messages} }
-        format.json { render :json => @bank_statement.errors, :status => :unprocessable_entity }
       end
+    else
+      on_error(@bank_statement, :new)
     end
   end
 
@@ -46,28 +45,26 @@ class BankStatementsController < ApplicationController
   # PATCH/PUT /bank_statements/1.json
   def update
     statement_params = bank_statement_params
-    respond_to do |format|
-      if (statement_params.blank? && !statement_params.nil?) || (statement_params.present? && update_bank_statement(statement_params))
+    if (statement_params.blank? && !statement_params.nil?) || (statement_params.present? && update_bank_statement(statement_params))
+      respond_to do |format|
         format.html { redirect_to @bank_statement, :flash => {:notice => i18n_message(:updated, {:name => @bank_statement.name})} }
         format.json { render :show, :status => :ok, :location => @bank_statement }
-      else
-        format.html { render :edit, :flash => {:error => @bank_statement.errors.full_messages} }
-        format.json { render :json => @bank_statement.errors, :status => :unprocessable_entity }
       end
+    else
+      on_error(@bank_statement, :edit)
     end
   end
 
   # DELETE /bank_statements/1
   # DELETE /bank_statements/1.json
   def destroy
-    respond_to do |format|
-      if @bank_statement.destroy
+    if @bank_statement.destroy
+      respond_to do |format|
         format.html { redirect_to bank_statements_url, :flash => {:notice => i18n_message(:destroyed, {:name => @bank_statement.name})} }
         format.json { head :no_content }
-      else
-        format.html { redirect_to bank_statements_url, :flash => {:error => @bank_statement.errors.full_messages} }
-        format.json { render :json => @bank_statement.errors, :status => :unprocessable_entity }
       end
+    else
+      on_error(@bank_statement, bank_statement_url(@bank_statement), true)
     end
   end
 
@@ -123,7 +120,7 @@ class BankStatementsController < ApplicationController
     end
 
     def update_bank_statement(statement_params)
-      @bank_statement.update(statement_params)
+      @bank_statement.update_attributes(statement_params)
     rescue ActiveRecord::RecordNotUnique => e
       # e.message => "Mysql2::Error: Duplicate entry '...' for key 'index_bank_statements_on_bank_account_id_and_month_and_year': INSERT INTO `bank_statements` (...)"
       @bank_statement.errors.add(:month, :date_taken)

@@ -10,5 +10,4 @@ coverage:
 
   ignore:
     - spec/.*
-    - app/views/.*
     - vendor/.*

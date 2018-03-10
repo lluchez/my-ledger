@@ -4,10 +4,11 @@ RSpec.describe BankStatementsController, type: :controller do
   render_views
 
   let(:param_key) {:bank_statement }
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   describe "GET #index" do
-    let!(:bank_statement) { FactoryGirl.create(:bank_statement, :user_id => user.id) }
+    let!(:bank_statement) { FactoryBot.create(:bank_statement, :user_id => user.id) }
+    let!(:other_statement) { FactoryBot.create(:bank_statement) }
 
     it "should redirect to the sign-in page when not logged-in" do
       sign_in(nil)
@@ -21,6 +22,21 @@ RSpec.describe BankStatementsController, type: :controller do
 
       get :index, params: {}
       expect(response).to be_success
+    end
+
+    it "should return a success JSON response" do
+      sign_in(user)
+
+      get :index, params: {}, format: :json
+      expect(response).to be_success
+
+      data = JSON.parse(response.body)
+      expect(data.count).to eq(1)
+      ids = data.map{ |o| o["id"] }
+      expect(ids).to include(bank_statement.id)
+      expect(ids).to_not include(other_statement.id)
+      assert_json_bank_statement(data.first, bank_statement)
+      expect(data.first["bank_account_name"]).to eq(bank_statement.bank_account.name)
     end
   end
 
@@ -41,8 +57,8 @@ RSpec.describe BankStatementsController, type: :controller do
   end
 
   describe "GET #show/#edit" do
-    let(:owner) { FactoryGirl.create(:user) }
-    let(:bank_statement) { FactoryGirl.create(:bank_statement, :user_id => owner.id) }
+    let(:owner) { FactoryBot.create(:user) }
+    let(:bank_statement) { FactoryBot.create(:bank_statement, :user_id => owner.id) }
 
     it "should redirect to the sign-in page when not logged-in" do
       sign_in(nil)
@@ -79,11 +95,19 @@ RSpec.describe BankStatementsController, type: :controller do
         expect(response).to be_success
       end
     end
+
+    it "should return a success JSON response" do
+      sign_in(owner)
+
+      get :show, params: {:id => bank_statement.id}, format: :json
+      expect(response).to be_success
+
+      assert_json_bank_statement(hash_from_json_body, bank_statement)
+    end
   end
 
   describe "POST #create" do
-    let(:statement_parser) { FactoryGirl.create(:chase_parser) }
-    let(:bank_account) { FactoryGirl.create(:bank_account, :user_id => user.id, :statement_parser_id => statement_parser.id) }
+    let(:bank_account) { FactoryBot.create(:bank_account, :user_id => user.id, :parser => FactoryBot.create(:chase_parser)) }
     let(:bank_statement_attrs) do
       {
         :month => 1,
@@ -164,11 +188,22 @@ RSpec.describe BankStatementsController, type: :controller do
       expect(response).to redirect_to(bank_statement_url(assigns[:bank_statement]))
       # expect(flash[:notice]).to be_present
     end
+
+    it "should create the bank statement and returns a success JSON response" do
+      sign_in(user)
+
+      expect {
+        post :create, params: {param_key => bank_statement_attrs}, format: :json
+        expect(response).to be_success
+      }.to change { user.bank_statements.count }.by(1)
+
+      assert_json_bank_statement(hash_from_json_body, assigns[:bank_statement])
+    end
   end
 
   describe "PUT #update" do
-    let(:other_bank_statement) { FactoryGirl.create(:bank_statement) }
-    let(:my_bank_statement) { FactoryGirl.create(:bank_statement, :user => user) }
+    let(:other_bank_statement) { FactoryBot.create(:bank_statement) }
+    let(:my_bank_statement) { FactoryBot.create(:bank_statement, :user => user) }
 
     it "should redirect to the sign-in page when not logged-in" do
       sign_in(nil)
@@ -235,11 +270,23 @@ RSpec.describe BankStatementsController, type: :controller do
       expect(response).to redirect_to(bank_statement_url(my_bank_statement))
       expect(flash[:notice]).to be_present
     end
+
+    it "update the bank statement and returns a success JSON response" do
+      sign_in(user)
+      new_year = my_bank_statement.year + 1
+
+      expect {
+        put :update, params: {:id => my_bank_statement.id, param_key => {:year => new_year}}, format: :json
+        expect(response).to be_success
+      }.to change { my_bank_statement.reload.year }.to(new_year)
+
+      json = assert_json_bank_statement(hash_from_json_body, my_bank_statement.reload)
+      expect(json[:year]).to eq(new_year)
+    end
   end
 
   describe "DELETE #destroy" do
-    let!(:other_bank_statement) { FactoryGirl.create(:bank_statement) }
-    let!(:my_bank_statement) { FactoryGirl.create(:bank_statement, :user => user) }
+    let!(:my_bank_statement) { FactoryBot.create(:bank_statement, :user => user) }
 
     it "should redirect to the sign-in page when not logged-in" do
       sign_in(nil)
@@ -262,6 +309,7 @@ RSpec.describe BankStatementsController, type: :controller do
     it "should return a 404 response when trying to delete someone else's statement" do
       sign_in(user)
 
+      other_bank_statement = FactoryBot.create(:bank_statement)
       expect {
         delete :destroy, params: {:id => other_bank_statement.id}
       }.to_not change { BankStatement.count }
@@ -275,7 +323,7 @@ RSpec.describe BankStatementsController, type: :controller do
       expect {
         delete :destroy, params: {:id => my_bank_statement.id}
       }.to_not change { BankStatement.count }
-      expect(response).to redirect_to(bank_statements_url)
+      expect(response).to redirect_to(bank_statement_url(my_bank_statement))
       # expect(flash[:error]).to be_present
     end
 
@@ -287,6 +335,17 @@ RSpec.describe BankStatementsController, type: :controller do
       }.to change { BankStatement.count }.by(-1)
       expect(response).to redirect_to(bank_statements_url)
       expect(flash[:notice]).to be_present
+    end
+
+    it "should delete the bank statement of that user and return an empty JSON response" do
+      sign_in(user)
+
+      expect {
+        delete :destroy, params: {:id => my_bank_statement.id}, format: :json
+        expect(response).to be_success
+      }.to change { BankStatement.count }.by(-1)
+
+      expect(response.body).to be_blank
     end
   end
 

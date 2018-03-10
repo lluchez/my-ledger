@@ -37,14 +37,13 @@ class StatementRecordsController < ApplicationController
     record_params = statement_record_params || {}
     @statement_record = StatementRecord.new(record_params.merge(:user_id => current_user.id))
     verify_statement_id_from_attributes(record_params)
-    respond_to do |format|
-      if record_params.present? && @statement_record.errors.blank? && @statement_record.save
+    if record_params.present? && @statement_record.errors.blank? && @statement_record.save
+      respond_to do |format|
         format.html {redirect_to_saved_record(:created) }
         format.json { render :show, :status => :created, :location => @statement_record }
-      else
-        format.html { render :new, :flash => {:error => @statement_record.errors.full_messages} }
-        format.json { render :json => @statement_record.errors, :status => :unprocessable_entity }
       end
+    else
+      on_error(@statement_record, :new)
     end
   end
 
@@ -53,29 +52,27 @@ class StatementRecordsController < ApplicationController
   def update
     record_params = statement_record_params || {}
     verify_statement_id_from_attributes(record_params)
-    respond_to do |format|
-      if record_params.blank? || (@statement_record.errors.blank? && @statement_record.update_attributes(record_params))
+    if record_params.blank? || (@statement_record.errors.blank? && @statement_record.update_attributes(record_params))
+      respond_to do |format|
         format.html { redirect_to_saved_record(:updated) }
         format.json { render(:show, :status => :ok, :location => @statement_record) }
-      else
-        format.html { render(:edit, :flash => {:error => @statement_record.errors.full_messages}) }
-        format.json { render :json => @statement_record.errors, :status => :unprocessable_entity }
       end
+    else
+      on_error(@statement_record, :edit)
     end
   end
 
   # DELETE /statement_records/1
   # DELETE /statement_records/1.json
   def destroy
-    respond_to do |format|
-      url = get_index_page
-      if @statement_record.destroy
+    url = get_index_page
+    if @statement_record.destroy
+      respond_to do |format|
         format.html { redirect_to(url, :flash => {:notice => i18n_message(:destroyed, {:name => @statement_record.name})}) }
         format.json { head(:no_content) }
-      else
-        format.html { redirect_to(url, :flash => {:error => @statement_record.errors.full_messages}) }
-        format.json { render(:json => @statement_record.errors, :status => :unprocessable_entity) }
       end
+    else
+      on_error(@statement_record, url, true)
     end
   end
 

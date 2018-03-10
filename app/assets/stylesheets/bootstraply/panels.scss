@@ -9,16 +9,23 @@
   }
 
   .col-label {
-    font-weight: bold;
-    & > span::after {
+    & > label::after {
       content: ":";
     }
   }
 
-  .panel-footer::after {
-    display: block;
-    content: "";
-    clear: both;
+  .panel-footer {
+    &::after {
+      display: block;
+      content: "";
+      clear: both;
+    }
+    .pull-right {
+      margin-left: 1em;
+    }
+    .pull-left {
+      margin-right: 1em;
+    }
   }
 }
 

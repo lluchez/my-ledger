@@ -4,9 +4,9 @@ describe StatementRecordCategoryRules::RegexpCategoryRule do
 
   describe '#validate_specific_fields' do
     context 'RegexpCategoryRule' do
-      let(:user) { FactoryGirl.create(:user) }
-      let(:record_category) { FactoryGirl.create(:statement_record_category, :user => user) }
-      let(:attrs) { FactoryGirl.attributes_for(:regexp_category_rule).merge(:user => user, :category_id => record_category.id) }
+      let(:user) { FactoryBot.create(:user) }
+      let(:record_category) { FactoryBot.create(:statement_record_category, :user => user) }
+      let(:attrs) { FactoryBot.attributes_for(:regexp_category_rule).merge(:user => user, :category_id => record_category.id) }
 
       it 'should require a regexp to parse statement records' do
         rule = StatementRecordCategoryRules::CategoryRuleBase.new(attrs.merge(:pattern => nil))

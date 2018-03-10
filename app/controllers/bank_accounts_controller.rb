@@ -29,14 +29,13 @@ class BankAccountsController < ApplicationController
   def create
     account_params = bank_account_params
     @bank_account = BankAccount.new((account_params || {}).merge(:user_id => current_user.id))
-    respond_to do |format|
-      if account_params.present? && @bank_account.save
+    if account_params.present? && @bank_account.save
+      respond_to do |format|
         format.html { redirect_to @bank_account, :flash => {:notice => i18n_message(:created, {:name => @bank_account.name})} }
         format.json { render :show, :status => :created, :location => @bank_account }
-      else
-        format.html { render :new, :flash => {:error => @bank_account.errors.full_messages} }
-        format.json { render :json => @bank_account.errors, :status => :unprocessable_entity }
       end
+    else
+      on_error(@bank_account, :new)
     end
   end
 
@@ -44,28 +43,26 @@ class BankAccountsController < ApplicationController
   # PATCH/PUT /bank_accounts/1.json
   def update
     account_params = bank_account_params
-    respond_to do |format|
-      if (account_params.blank? && !account_params.nil?) || (account_params.present? && @bank_account.update(account_params))
+    if (account_params.blank? && !account_params.nil?) || (account_params.present? && @bank_account.update_attributes(account_params))
+      respond_to do |format|
         format.html { redirect_to @bank_account, :flash => {:notice => i18n_message(:updated, {:name => @bank_account.name})} }
         format.json { render :show, :status => :ok, :location => @bank_account }
-      else
-        format.html { render :edit, :flash => {:error => @bank_account.errors.full_messages} }
-        format.json { render :json => @bank_account.errors, :status => :unprocessable_entity }
       end
+    else
+      on_error(@bank_account, :edit)
     end
   end
 
   # DELETE /bank_accounts/1
   # DELETE /bank_accounts/1.json
   def destroy
-    respond_to do |format|
-      if @bank_account.destroy
+    if @bank_account.destroy
+      respond_to do |format|
         format.html { redirect_to bank_accounts_url, :flash => {:notice => i18n_message(:destroyed, {:name => @bank_account.name})} }
         format.json { head :no_content }
-      else
-        format.html { redirect_to bank_accounts_url, :flash => {:error => @bank_account.errors.full_messages} }
-        format.json { render :json => @bank_account.errors, :status => :unprocessable_entity }
       end
+    else
+      on_error(@bank_account, bank_account_url(@bank_account), true)
     end
   end
 

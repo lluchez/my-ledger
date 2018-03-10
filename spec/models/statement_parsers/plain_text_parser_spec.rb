@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe StatementParsers::PlainTextParser do
 
-  let(:parser) { FactoryGirl.build(:plain_text_parser) }
+  let(:parser) { FactoryBot.build(:plain_text_parser) }
 
   describe '#validate_specific_fields' do
     context 'PlainTextParser' do
-      let(:attrs) { FactoryGirl.attributes_for(:plain_text_parser) }
+      let(:attrs) { FactoryBot.attributes_for(:plain_text_parser) }
 
       it 'should require a regexp to parse statements' do
         parser = StatementParsers::ParserBase.new(attrs.merge(:plain_text_regex => nil))
@@ -115,7 +115,7 @@ describe StatementParsers::PlainTextParser do
   end
 
   describe '#get_records_attributes_from_raw_text' do
-    let(:parser) { FactoryGirl.build(:chase_parser) }
+    let(:parser) { FactoryBot.build(:chase_parser) }
 
     context 'empty data' do
       it 'should not return any attributes nether errors' do
