@@ -2,12 +2,14 @@ require 'spec_helper'
 
 describe StatementParsers::ParserBase do
 
-  it { should have_many(:bank_accounts) }
+  describe 'assotiations and fields' do
+    it { should have_many(:bank_accounts) }
 
-  it { should_not allow_value(nil).for(:type) }
-  it { should_not allow_value("").for(:type) }
-  it { should_not allow_value("UnknownParser").for(:type) }
-  it { should allow_value("PlainTextParser").for(:type) }
+    it { should_not allow_value(nil).for(:type) }
+    it { should_not allow_value("").for(:type) }
+    it { should_not allow_value("UnknownParser").for(:type) }
+    it { should allow_value("PlainTextParser").for(:type) }
+  end
 
   describe '#type' do
     context 'missing type' do

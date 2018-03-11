@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  audited # see which fields shouldn't be audited
+
   has_many :bank_accounts, :dependent => :destroy
   has_many :bank_statements, :dependent => :destroy
   has_many :statement_records, :dependent => :destroy

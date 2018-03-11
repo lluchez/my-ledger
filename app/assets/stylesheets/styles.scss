@@ -6,3 +6,18 @@
     background-color: #EEE;
   }
 }
+
+
+// audits styles
+table td .audit-description {
+  .column {
+    font-weight: bold;
+  }
+  .from, .to {
+    font-family: monospace;
+    background-color: #EEE;
+  }
+  .text {
+    font-size: 90%;
+  }
+}

@@ -6,11 +6,20 @@ describe BankStatement do
     it { should belong_to(:user) }
     it { should belong_to(:bank_account) }
     it { should have_many(:records) }
+
     it { should validate_presence_of(:user_id) }
     it { should validate_presence_of(:bank_account_id) }
     it { should validate_presence_of(:total_amount) }
     it { should validate_presence_of(:year) }
     it { should validate_inclusion_of(:month).in_range(1..12).with_message(:invalid) }
+  end
+
+  describe 'audited' do
+    before(:each) { described_class.auditing_enabled = true }
+    after(:each) { described_class.auditing_enabled = true }
+
+    it { should be_audited.associated_with(:bank_account) }
+    it { should have_associated_audits }
   end
 
   describe '#name' do

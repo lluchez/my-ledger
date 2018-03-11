@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :audits, :only => [:index]
   resources :bank_accounts
   resources :bank_statements do
     resources :statement_records

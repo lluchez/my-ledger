@@ -1,4 +1,7 @@
 MODELS = {
+  :audit => {
+    :props  => [:id, :auditable_id, :auditable_type, :auditable_url, :action, :timestamp]
+  },
   :bank_account => {
     :props  => [:id, :name, :parser_id => :statement_parser_id],
     :check_url => true
@@ -12,10 +15,15 @@ MODELS = {
     :check_url => true
   },
   :statement_record => {
-    :props  => [:id, :amount, :date, :description, :statement_id],
+    :props  => [:amount], #[:id, :amount, :date, :description, :statement_id],
     :check_url => true
   }
 }
+
+def assert_json_audit(json, audit)
+  json = assert_json_model(json, audit, :audit)
+  expect([Hash, Array]).to include(json[:audited_changes].class)
+end
 
 def assert_json_bank_account(json, bank_account)
   assert_json_model(json, bank_account, :bank_account)
@@ -30,7 +38,7 @@ def assert_json_statement_parser(json, statement_parser)
 end
 
 def assert_json_statement_record(json, statement_record)
-  json = assert_json_model(json, statement_record, :statement_record)
+  assert_json_model(json, statement_record, :statement_record)
 end
 
 def assert_json_model(json, model, type)
@@ -39,13 +47,14 @@ def assert_json_model(json, model, type)
   data[:props].each do |prop|
     json_prop = model_prop = prop
     json_prop, model_prop = prop.first if prop.class == Hash
+    json_value = json[json_prop]
     value = model.send(model_prop)
-    value = value.to_s("%F") if value.class == Date
-    expect(json[json_prop]).to eq(value)
+    value = value.strftime("%F") if value.class == Date
+    value = value.strftime("%FT%T.%LZ") if value.class.in?([DateTime, ActiveSupport::TimeWithZone]) # 2018-03-11T16:44:45.000Z
+    value = value.to_f if value.class == BigDecimal
+    expect(json_value).to eq(value)
   end
-  if data[:check_url]
-    expect(json[:url]).to match("/#{model.id}\.json$")
-  end
+  expect(json[:url]).to match("/#{model.id}\.json$") if data[:check_url]
   json
 end
 

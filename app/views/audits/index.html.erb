@@ -1,0 +1,42 @@
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <li class="active">Audits</li>
+</ol>
+
+<table class="<%= ApplicationController::TABLE_CLASS %> centered-cols">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Action</th>
+      <th>Model</th>
+      <th>Changes</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @audits.each do |audit| %>
+      <tr>
+        <td><%= audit.date_formatted %></td>
+        <td><%= audit.action_formatted %></td>
+        <td><%= link_to(audit.model_formatted, audit.auditable_url) %></td>
+        <td class="left-aligned">
+          <% audit.audited_changes.each do |column,changes| %>
+            <div class="audit-description">
+              <% if changes.class == Array %>
+                <span class="column"><%= Audit.format_column(column) %></span>
+                <span class="text">changed from</span>
+                <span class="from"><%= Audit.format_value(changes.first) %></span>
+                <span class="text">to</span>
+                <span class="from"><%= Audit.format_value(changes.last) %></span>.
+              <% else %>
+                <span class="column"><%= Audit.format_column(column) %></span>
+                <span class="text">is</span>
+                <span class="from"><%= Audit.format_value(changes) %></span>.
+              <% end %>
+            </div>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

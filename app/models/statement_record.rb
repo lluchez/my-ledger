@@ -5,6 +5,8 @@ class StatementRecord < ApplicationRecord
   belongs_to :category_rule, :optional => true, class_name: StatementRecordCategoryRules::CategoryRuleBase
   has_one :bank_account, :through => :statement
 
+  audited :associated_with => :statement
+
   scope :from_user, ->(user) { where(:user_id => user.id) }
 
   validates_presence_of :user_id, :statement_id, :amount, :date, :description

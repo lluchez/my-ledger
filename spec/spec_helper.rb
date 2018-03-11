@@ -27,6 +27,8 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'shoulda-matchers'
+require 'audited-rspec.rb'
+
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 Dir[Rails.root.join("spec/helpers/**/*.rb")].each {|f| require f}
 
@@ -37,6 +39,11 @@ RSpec.configure do |config|
 
   config.include Devise::Test::ControllerHelpers, :type => :controller
   config.include ControllerHelpers, :type => :controller
+
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+    disable_audited_on_all_models
+  end
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and

@@ -5,6 +5,9 @@ class BankAccount < ApplicationRecord
   belongs_to :parser, :validate => true, class_name: StatementParsers::ParserBase, :foreign_key => 'statement_parser_id'
   has_many :statements, :dependent => :destroy, :class_name => BankStatement
 
+  audited
+  has_associated_audits
+
   scope :from_user, ->(user) { where(:user_id => user.id) }
 
   def latest_statement

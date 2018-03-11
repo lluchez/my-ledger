@@ -2,17 +2,26 @@ require 'spec_helper'
 
 describe StatementRecord do
 
-  it { should belong_to(:user) }
-  it { should belong_to(:statement) }
-  it { should belong_to(:category) }
-  it { should belong_to(:category_rule) }
-  it { should have_one(:bank_account) }
+  describe 'assotiations and fields' do
+    it { should belong_to(:user) }
+    it { should belong_to(:statement) }
+    it { should belong_to(:category) }
+    it { should belong_to(:category_rule) }
+    it { should have_one(:bank_account) }
 
-  it { should validate_presence_of(:user_id) }
-  it { should validate_presence_of(:statement_id) }
-  it { should validate_presence_of(:amount) }
-  it { should validate_presence_of(:date) }
-  it { should validate_presence_of(:description) }
+    it { should validate_presence_of(:user_id) }
+    it { should validate_presence_of(:statement_id) }
+    it { should validate_presence_of(:amount) }
+    it { should validate_presence_of(:date) }
+    it { should validate_presence_of(:description) }
+  end
+
+  describe 'audited' do
+    before(:each) { described_class.auditing_enabled = true }
+    after(:each) { described_class.auditing_enabled = true }
+
+    it { should be_audited.associated_with(:statement) }
+  end
 
   describe '#update_statement_total_amount' do
     let!(:statement) { FactoryBot.create(:bank_statement) }

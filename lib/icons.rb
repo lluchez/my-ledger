@@ -1,5 +1,7 @@
 class Icons
 
+  AUDIT = "glyphicon glyphicon-th-list"
+
   STATEMENT_PARSER = "glyphicon glyphicon-flash"
   BANK_ACCOUNT = "glyphicon glyphicon-book"
   BANK_STATEMENT = "glyphicon glyphicon-list-alt"

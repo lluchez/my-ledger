@@ -2,20 +2,29 @@ require 'spec_helper'
 
 describe StatementRecordCategoryRules::CategoryRuleBase do
 
-  it { should belong_to(:user) }
-  it { should belong_to(:category) }
-  it { should have_many(:records) }
+  describe 'assotiations and fields' do
+    it { should belong_to(:user) }
+    it { should belong_to(:category) }
+    it { should have_many(:records) }
 
-  it { should validate_presence_of(:name) }
-  it { should validate_presence_of(:pattern) }
-  it { should validate_presence_of(:user_id) }
-  it { should validate_presence_of(:category_id) }
+    it { should validate_presence_of(:name) }
+    it { should validate_presence_of(:pattern) }
+    it { should validate_presence_of(:user_id) }
+    it { should validate_presence_of(:category_id) }
 
-  it { should_not allow_value(nil).for(:type) }
-  it { should_not allow_value("").for(:type) }
-  it { should_not allow_value("UnknownRule").for(:type) }
-  it { should allow_value("TextCategoryRule").for(:type) }
-  it { should allow_value("RegexpCategoryRule").for(:type) }
+    it { should_not allow_value(nil).for(:type) }
+    it { should_not allow_value("").for(:type) }
+    it { should_not allow_value("UnknownRule").for(:type) }
+    it { should allow_value("TextCategoryRule").for(:type) }
+    it { should allow_value("RegexpCategoryRule").for(:type) }
+  end
+
+  context 'audited' do
+    before(:each) { described_class.auditing_enabled = true }
+    after(:each) { described_class.auditing_enabled = false }
+
+    it { should be_audited.associated_with(:category) }
+  end
 
   describe '#active' do
     it 'should only return active rules' do

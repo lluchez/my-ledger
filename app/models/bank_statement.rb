@@ -3,6 +3,9 @@ class BankStatement < ApplicationRecord
   belongs_to :bank_account, :validate => true
   has_many :records, :dependent => :destroy, :class_name => StatementRecord, :foreign_key => :statement_id
 
+  audited :associated_with => :bank_account
+  has_associated_audits
+
   scope :from_user, ->(user) { where(:user_id => user.id) }
 
   # attr_accessible :records_attributes

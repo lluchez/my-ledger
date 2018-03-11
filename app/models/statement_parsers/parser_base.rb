@@ -3,6 +3,8 @@ class StatementParsers::ParserBase < ApplicationRecord
 
   has_many :bank_accounts, :foreign_key => 'statement_parser_id', :dependent => :destroy
 
+  audited
+
   validates_presence_of :name
   validate :type_should_be_valid
   validate :validate_specific_fields

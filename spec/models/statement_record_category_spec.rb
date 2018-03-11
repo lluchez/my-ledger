@@ -2,10 +2,20 @@ require 'spec_helper'
 
 describe StatementRecordCategory do
 
-  it { should belong_to(:user) }
-  it { should have_many(:records) }
-  it { should have_many(:rules) }
-  it { should validate_presence_of(:name) }
+  describe 'assotiations and fields' do
+    it { should belong_to(:user) }
+    it { should have_many(:records) }
+    it { should have_many(:rules) }
+    it { should validate_presence_of(:name) }
+  end
+
+  describe 'audited' do
+    before(:each) { described_class.auditing_enabled = true }
+    after(:each) { described_class.auditing_enabled = true }
+
+    it { should be_audited }
+    it { should have_associated_audits }
+  end
 
   describe '#active' do
     it 'should only return active categories' do

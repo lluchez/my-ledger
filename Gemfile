@@ -36,6 +36,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'bcrypt', '~> 3.1.7'
 gem 'rollbar'
 # gem 'oj', '~> 2.12.14' # Gen suggested by Rollbar for JSON serialization
+gem "audited"
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
