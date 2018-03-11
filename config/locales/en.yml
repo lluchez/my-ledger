@@ -96,4 +96,5 @@ en:
       type: "Transaction"
   general:
     login: "Please log-in first..."
+    connection_not_secure: "Your connection is not secure. Please use HTTPS instead."
 

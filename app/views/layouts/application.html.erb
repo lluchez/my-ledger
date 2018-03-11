@@ -16,14 +16,14 @@
         <%
           classes_map = {
             "error" => "alert-danger",
-            "alert" => "alert-danger",
+            "alert" => "alert-warning",
             "notice" => "alert-info"
           }
           classnames = ["alert"]
           classnames += [classes_map[type]] if classes_map[type]
           messages = [messages] if messages.kind_of?(String)
         %>
-        <div id="error_explanation" class="<%= classnames.join(" ") %>">
+        <div class="<%= classnames.join(" ") %>">
           <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">&times;</a>
           <ul>
             <% messages.each do |message| %>

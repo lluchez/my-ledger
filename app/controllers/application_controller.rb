@@ -50,4 +50,13 @@ class ApplicationController < ActionController::Base
     RollbarHelper.warning("Missing controller translation for key '#{key} in #{self.class.name}") if text.blank?
     text
   end
+
+  def add_flash_message(type, message)
+    if flash[type].present?
+      flash[type] = [flash[type]] unless flash[type].class == Array
+    else
+      flash[type] = []
+    end
+    flash[type].push(message)
+  end
 end
