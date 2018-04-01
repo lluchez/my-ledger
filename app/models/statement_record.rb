@@ -16,6 +16,10 @@ class StatementRecord < ApplicationRecord
 
   alias_attribute :name, :description
 
+  def self.import(csv_file, statement, remove_existing_records)
+    BankStatementsCsvImport.new.import(statement, csv_file, remove_existing_records)
+  end
+
   def update_statement_total_amount_after_save
     if id_changed?
       update_statement_total_amount_by(self.amount)

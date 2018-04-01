@@ -69,10 +69,13 @@
   </div>
   <div class="panel-footer">
     <%= link_to(edit_bank_statement_path(@bank_statement), :class => "btn btn-success pull-right") do %>
-      <i class="glyphicon glyphicon-pencil"></i> Edit Statement
+      <i class="<%= Icons::EDIT %>"></i> Edit Statement
+    <% end %>
+    <%= link_to(upload_csv_bank_statement_statement_records_path(@bank_statement), :class => "btn btn-primary pull-right") do %>
+      <i class="<%= Icons::UPLOAD %>"></i> CSV Import
     <% end %>
     <%= link_to(bank_statement_path(@bank_statement), :class => "btn btn-danger pull-right", method: :delete, data: { confirm: 'Are you sure?' }) do %>
-      <i class="glyphicon glyphicon-trash"></i> Delete
+      <i class="<%= Icons::DELETE %>"></i> Delete
     <% end %>
   </div>
 </div>

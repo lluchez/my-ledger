@@ -9,4 +9,10 @@ class Icons
   STATEMENT_RECORD_CATEGORY = "glyphicon glyphicon-glass"
   STATEMENT_RECORD_CATEGORY_RULE = "glyphicon glyphicon-ok"
 
+  EDIT   = "glyphicon glyphicon-pencil"
+  DELETE = "glyphicon glyphicon-trash"
+  INFO   = "glyphicon glyphicon-info-sign"
+  IMPORT = "glyphicon glyphicon-import"
+  UPLOAD = "glyphicon glyphicon-upload"
+
 end

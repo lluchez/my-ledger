@@ -1,0 +1,82 @@
+<%
+  css_col_label = "col-sm-3 col-md-2 col-label"
+  css_col_input = "col-sm-9 col-md-10"
+  from_opts = {html: {class: "form-horizontal center"}, multipart: true}
+  form_action = @bank_statement ? import_csv_bank_statement_statement_records_path(@bank_statement) : import_csv_statement_records_path
+%>
+
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <% if @bank_statement.present? %>
+    <li><%= link_to(@bank_statement.name, @bank_statement) %></li>
+  <% else %>
+    <li><%= link_to("Statements", bank_statements_path) %></li>
+  <% end %>
+  <li class="active">CSV Upload</li>
+</ol>
+
+<%= form_tag(form_action, from_opts) do |f| %>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <i class="icon <%= Icons::UPLOAD %>"></i>
+      CSV Upload
+    </div>
+    <div class="panel-body">
+      <% if @bank_accounts.present? %>
+        <div class="form-horizontal">
+          <div class="form-group">
+            <%= label_tag(:bank_statement_id, "Statement:", class: css_col_label) %>
+            <div class="<%= css_col_input %>">
+              <%= select_tag(:bank_statement_id,
+                option_groups_from_collection_for_select(@bank_accounts, :statements, :name, :id, :name),
+                {prompt: "<Statement>", class: "form-control", required: true})
+              %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <div class="form-horizontal">
+        <div class="form-group">
+          <%= label_tag(:file, "CSV File:", class: css_col_label) %>
+          <div class="<%= css_col_input %>"><%= file_field_tag(:file, {accept: '.csv', required: true}) %></div>
+        </div>
+      </div>
+      <div class="form-horizontal">
+        <div class="form-group">
+          <%= label_tag(:clear_existing_records, "Options:", class: css_col_label) %>
+          <div class="<%= css_col_input %>">
+            <label class="normal-font">
+              <%= check_box_tag(:clear_existing_records, 1, true) %>
+              Remove existing transactions
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button type="submit" class="btn btn-success pull-right">
+        <i class="<%= Icons::UPLOAD %>"></i>
+        Import
+      </button>
+    </div>
+  </div>
+<% end %>
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <i class="icon <%= Icons::INFO %>"></i>
+    Help
+  </div>
+  <div class="panel-body">
+    The CSV file must contain all required columns:
+    <ul>
+      <li><span class="font-pre">description</span>: description of the transaction.</li>
+      <li><span class="font-pre">date</span>: date of the transaction. Should be formatted as <span class="font-pre">YYYY-MM-DD</span> or <span class="font-pre">YYYY/MM/DD</span>.</li>
+      <li><span class="font-pre">amount</span>: amount of the transaction. Can be prefixed by <span class="font-pre">+</span> or <span class="font-pre">-</span>.</li>
+    </ul>
+    <div><b>Sample</b>:</div>
+    <pre>"description","date","amount"
+"Transaction 1","2017/12/31","+1,123.89"</pre>
+  </div>
+</div>
+

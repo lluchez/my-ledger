@@ -76,6 +76,23 @@ class StatementRecordsController < ApplicationController
     end
   end
 
+  # GET /bank_statements/1/statement_records/upload_csv
+  def upload_csv
+    list_bank_accounts_with_statements unless @bank_statement.present?
+  end
+
+  # POST /bank_statements/1/statement_records/import_csv
+  def import_csv
+    if validate_csv_import_params
+      imported_records = import_records_from_csv
+      if imported_records
+        redirect_to(@bank_statement, :flash => {:notice => i18n_message(:csv_import_successful, {records_count: imported_records.count})})
+        return
+      end
+    end
+    redirect_to(request.referer, :flash => {:error => @errors})
+  end
+
   private
 
     def set_statement_record
@@ -124,4 +141,21 @@ class StatementRecordsController < ApplicationController
       end
     end
 
+    def validate_csv_import_params
+      @errors = []
+      @errors << i18n_message(:invalid_statement) unless @bank_statement.present?
+      @errors << i18n_message(:blank_csv_file) if params[:file].blank?
+
+      @errors.blank?
+    end
+
+    def import_records_from_csv
+      StatementRecord.import(params[:file], @bank_statement, params[:clear_existing_records].present?)
+    rescue CsvFileParsingException => e
+      @errors = e.exceptions.map(&:message)
+      false
+    rescue StandardError => e
+      @errors = [e.message] # message is already sanitized and Rollbar raised
+      false
+    end
 end

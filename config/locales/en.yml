@@ -71,16 +71,28 @@ en:
             statement_id:
               blank: "Statement is required"
               invalid: "Invalid statement"
+            description:
+              blank: "description is required"
             date:
               blank: "Date is required"
+              invalid_format: "Invalid Date format"
+              parsing_error: "Unable to parse the date"
             amount:
               blank: "Amount is required"
-
+              invalid_format: "Invalid Amount format"
   custom_errors:
     plain_text_statement_parser:
       line_format: "Unable to parse line %{line_number}"
       missing_groups: "Missing group(s) on line %{line_number}: %{missing_groups}"
       date_format: "Couldn't parse the date '%{date}' on line %{line_number}"
+  lib:
+    exceptions:
+      csv_row_parsing_exception: "%{message} on line %{row_index}"
+      csv_file_parsing_exception: "Unable to parse the CSV file. %{err_count} error(s) occured"
+    bank_statements_csv_parser:
+      invalid_csv_file: "Invalid CSV file provided: %{message}"
+    bank_statements_csv_import:
+      unable_to_save: "Unable to create the transactions"
   controllers:
     default:
       created: "%{type} %{name} was successfully created."
@@ -94,6 +106,9 @@ en:
       type: "Parser"
     statement_records_controller:
       type: "Transaction"
+      invalid_statement: "Invalid statement"
+      blank_csv_file: "CSV file is required"
+      csv_import_successful: "Transaction(s) imported: %{records_count}"
   general:
     login: "Please log-in first..."
     connection_not_secure: "Your connection is not secure. Please use HTTPS instead."

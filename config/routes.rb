@@ -2,9 +2,19 @@ Rails.application.routes.draw do
   resources :audits, :only => [:index]
   resources :bank_accounts
   resources :bank_statements do
-    resources :statement_records
+    resources :statement_records do
+      collection do
+        get  :upload_csv
+        post :import_csv
+      end
+    end
   end
-  resources :statement_records
+  resources :statement_records do
+    collection do
+      get  :upload_csv
+      post :import_csv
+    end
+  end
   resources :statement_parsers
   devise_for :users, :controllers => { registrations: 'registrations', sessions: 'sessions' }
 

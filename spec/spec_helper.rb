@@ -32,6 +32,8 @@ require 'audited-rspec.rb'
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 Dir[Rails.root.join("spec/helpers/**/*.rb")].each {|f| require f}
 
+require Rails.root.join("spec/fixtures/files/constants.rb")
+
 RSpec.configure do |config|
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
   config.use_transactional_fixtures = true

@@ -1,0 +1,6 @@
+"description","date","amount"
+"transaction 1","2018-04-28","1,369.99"
+"transaction 2","2018/04/28","1,199.89"
+"","2018/04/28","1,199.89"
+"transaction 3","2018-16-48","1,199.89"
+"transaction 3","2018-04-28","abc"

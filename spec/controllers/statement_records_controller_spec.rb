@@ -403,4 +403,121 @@ RSpec.describe StatementRecordsController, type: :controller do
     end
   end
 
+  describe 'GET #upload_csv' do
+    let(:owner) { FactoryBot.create(:user) }
+    let(:bank_statement) { FactoryBot.create(:bank_statement, :user => owner) }
+
+    it "should redirect to the sign-in page when not logged-in" do
+      sign_in(nil)
+
+      get :upload_csv, params: {:bank_statement_id => bank_statement.id}
+      expect_to_redirect_log_in_page
+    end
+
+    it 'should return a 404 response when providing an incorrect bank statement ID' do
+      sign_in(user)
+
+      get :upload_csv, params: {:bank_statement_id => bank_statement.id}
+      expect_to_render_404
+    end
+
+    it 'should render a page requesting the user for a CSV file' do
+      sign_in(owner)
+
+      get :upload_csv, params: {:bank_statement_id => bank_statement.id}
+      expect(response).to be_success
+    end
+  end
+
+  describe 'POST #import_csv' do
+    let(:owner) { FactoryBot.create(:user) }
+    let(:bank_statement) { FactoryBot.create(:bank_statement, :user => owner) }
+    let(:referer) { upload_csv_bank_statement_statement_records_path(bank_statement) }
+    let(:valid_csv_file) { fixture_file_upload('files/csv_bank_statements/statement_valid.csv') }
+    let(:invalid_csv_file) { fixture_file_upload('files/csv_bank_statements/statement_invalid.csv') }
+    let(:invalid_file) { fixture_file_upload('files/img.jpg') }
+
+    before(:each) do
+      allow_any_instance_of(ActionDispatch::Request).to receive(:referer).and_return(referer)
+    end
+
+    it "should redirect to the sign-in page when not logged-in" do
+      sign_in(nil)
+
+      post :import_csv, params: {:bank_statement_id => bank_statement.id}
+      expect_to_redirect_log_in_page
+    end
+
+    it 'should return a 404 response when providing an incorrect bank statement ID' do
+      sign_in(user)
+
+      post :import_csv, params: {:bank_statement_id => bank_statement.id}
+      expect_to_render_404
+    end
+
+    it 'should redirect to the previous page if the statement ID or the CSV file are missing' do
+      sign_in(user)
+
+      expect {
+        post :import_csv
+        expect(response).to redirect_to(referer)
+        expect(flash[:error]).to include(controller.send(:i18n_message, :invalid_statement))
+        expect(flash[:error]).to include(controller.send(:i18n_message, :blank_csv_file))
+      }.to_not change { bank_statement.reload.records.count }
+    end
+
+    it 'should redirect to the previous page if the statement ID or the CSV file are missing' do
+      sign_in(owner)
+
+      actual_exception = "invalid byte sequence in UTF-8"
+      expected_error = Locales::get_translation("lib.bank_statements_csv_parser.invalid_csv_file", {message: actual_exception})
+
+      expect {
+        post :import_csv, params: {:bank_statement_id => bank_statement.id, :file => invalid_file}
+        expect(response).to redirect_to(referer)
+        expect(flash[:error]).to include(expected_error)
+      }.to_not change { bank_statement.reload.records.count }
+    end
+
+    it 'should redirect to the previous page when some lines are incorrect' do
+      sign_in(owner)
+
+      csv_parser = BankStatementsCsvParser.new
+      expected_errors = BANK_STATEMENT_CSV_FILE_INVALID_ROWS.map do |row|
+        message = csv_parser.send(:translate_error_message, row[:attribute], row[:err_key])
+        Locales::exception_translation(:csv_row_parsing_exception, {message: message, row_index: row[:row_index]})
+      end
+
+      expect {
+        post :import_csv, params: {:bank_statement_id => bank_statement.id, :file => invalid_csv_file}
+        expect(response).to redirect_to(referer)
+        expect(flash[:error]).to eq(expected_errors)
+      }.to_not change { bank_statement.reload.records.count }
+    end
+
+    it 'should redirect to the previous page when unable to save the new records' do
+      sign_in(owner)
+
+      err_message = Locales::get_translation("lib.bank_statements_csv_import.unable_to_save")
+      allow_any_instance_of(StatementRecord).to receive(:save!).and_raise("Unexpected error")
+      expect(RollbarHelper).to receive(:error).once.with(err_message, {:e => anything()})
+
+      expect {
+        post :import_csv, params: {:bank_statement_id => bank_statement.id, :file => valid_csv_file}
+        expect(response).to redirect_to(referer)
+        expect(flash[:error]).to include(err_message)
+      }.to_not change { bank_statement.reload.records.count }
+    end
+
+    it 'should render a page requesting the user for a CSV file' do
+      sign_in(owner)
+
+      expect {
+        post :import_csv, params: {:bank_statement_id => bank_statement.id, :file => valid_csv_file}
+        expect(response).to redirect_to(bank_statement_path(bank_statement))
+        expect(flash[:notice]).to include(controller.send(:i18n_message, :csv_import_successful, {records_count: BANK_STATEMENT_CSV_FILE_VALID_ROWS_COUNT}))
+      }.to change { bank_statement.reload.records.count }.by(BANK_STATEMENT_CSV_FILE_VALID_ROWS_COUNT)
+    end
+  end
+
 end

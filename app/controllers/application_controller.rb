@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include LocalesHelper
+
   protect_from_forgery with: :exception
 
   TABLE_CLASS = "table table-manage table-responsive table-striped table-hover table-bordered table-condensed"
@@ -37,18 +39,7 @@ class ApplicationController < ActionController::Base
   end
 
   def i18n_message(key, params = {})
-    params[:default] = nil # to return `nil` if the text isn't found
-    base_key = "controllers.#{self.class.name.underscore}"
-    text = I18n.t("#{base_key}.#{key}", params)
-    if text.blank?
-      type = I18n.t("#{base_key}.type")
-      if type.present?
-        text = I18n.t("controllers.default.#{key}", params.merge(:type => type))
-      end
-    end
-
-    RollbarHelper.warning("Missing controller translation for key '#{key} in #{self.class.name}") if text.blank?
-    text
+    controller_translation(self, key, params)
   end
 
   def add_flash_message(type, message)
