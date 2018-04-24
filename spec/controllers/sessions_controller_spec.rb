@@ -13,7 +13,7 @@ RSpec.describe SessionsController, type: :controller do
       context "when not using a secure connection" do
         it "should show an alert message" do
           get :new
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(response.body).to include(I18n.t("general.connection_not_secure"))
         end
       end

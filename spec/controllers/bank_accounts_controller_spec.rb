@@ -21,14 +21,14 @@ RSpec.describe BankAccountsController, type: :controller do
       sign_in(user)
 
       get :index, params: {}
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "should return a success JSON response" do
       sign_in(user)
 
       get :index, params: {}, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
 
       data = JSON.parse(response.body)
       expect(data.count).to eq(1)
@@ -52,7 +52,7 @@ RSpec.describe BankAccountsController, type: :controller do
       sign_in(user)
 
       get :new, params: {}
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
@@ -92,7 +92,7 @@ RSpec.describe BankAccountsController, type: :controller do
 
       [:show, :edit].each do |method|
         get method, params: {:id => bank_account.id}
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 
@@ -100,7 +100,7 @@ RSpec.describe BankAccountsController, type: :controller do
       sign_in(owner)
 
       get :show, params: {:id => bank_account.id}, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
 
       assert_json_bank_account(hash_from_json_body, bank_account)
     end
@@ -154,7 +154,7 @@ RSpec.describe BankAccountsController, type: :controller do
 
       expect {
         post :create, params: {param_key => bank_account_attrs}, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       }.to change { user.bank_accounts.count }.by(1)
 
       assert_json_bank_account(hash_from_json_body, assigns[:bank_account])
@@ -225,7 +225,7 @@ RSpec.describe BankAccountsController, type: :controller do
 
       expect {
         put :update, params: {:id => my_bank_account.id, param_key => {:name => new_name}}, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       }.to change { my_bank_account.reload.name }.to(new_name)
 
       json = assert_json_bank_account(hash_from_json_body, my_bank_account.reload)
@@ -290,7 +290,7 @@ RSpec.describe BankAccountsController, type: :controller do
 
       expect {
         delete :destroy, params: {:id => my_bank_account.id}, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       }.to change { BankAccount.count }.by(-1)
 
       expect(response.body).to be_blank

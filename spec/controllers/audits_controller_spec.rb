@@ -48,7 +48,7 @@ RSpec.describe AuditsController, type: :controller do
         record = FactoryBot.create(:statement_record, :user_id => user.id)
 
         get :index, params: {}
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response.body).to include(record.description)
       end
 
@@ -56,15 +56,16 @@ RSpec.describe AuditsController, type: :controller do
         FactoryBot.create(:statement_record, :user_id => user.id)
 
         get :index, params: {}, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
 
         data = JSON.parse(response.body)
         expect(data.count).to eq(5)
-        # data = data.map {|a| a.deep_symbolize_keys }
 
         verify_audit_json(data, user, {:action => 'create', :auditable_type => 'StatementRecord'})
         verify_audit_json(data, user, {:action => 'create', :auditable_type => 'BankStatement'})
+        verify_audit_json(data, user, {:action => 'update', :auditable_type => 'BankStatement'})
         verify_audit_json(data, user, {:action => 'create', :auditable_type => 'BankAccount'})
+        verify_audit_json(data, user, {:action => 'create', :auditable_type => 'StatementParsers::ParserBase'})
       end
     end
   end

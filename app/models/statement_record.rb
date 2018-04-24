@@ -1,8 +1,8 @@
 class StatementRecord < ApplicationRecord
   belongs_to :user, :validate => true
-  belongs_to :statement, :validate => true, :class_name => BankStatement
-  belongs_to :category, :optional => true, :class_name => StatementRecordCategory
-  belongs_to :category_rule, :optional => true, class_name: StatementRecordCategoryRules::CategoryRuleBase
+  belongs_to :statement, :validate => true, :class_name => BankStatement.to_s
+  belongs_to :category, :optional => true, :class_name => StatementRecordCategory.to_s
+  belongs_to :category_rule, :optional => true, class_name: StatementRecordCategoryRules::CategoryRuleBase.to_s
   has_one :bank_account, :through => :statement
 
   audited :associated_with => :statement
@@ -21,10 +21,11 @@ class StatementRecord < ApplicationRecord
   end
 
   def update_statement_total_amount_after_save
-    if id_changed?
+    # NOTE: upgrading to Rails 5.2.0 (from 5.0.6) requires to use `previously_`/`previous_`
+    if id_previously_changed? # id_changed?
       update_statement_total_amount_by(self.amount)
-    elsif amount_changed?
-      update_statement_total_amount_by(self.amount - self.amount_was)
+    elsif amount_previously_changed? # amount_changed?
+      update_statement_total_amount_by(self.amount - self.amount_previous_change[0]) # self.amount_was
     end
   end
 

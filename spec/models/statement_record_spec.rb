@@ -38,11 +38,11 @@ describe StatementRecord do
 
     context 'on record updated' do
       it 'should update the value total_amount of the statement' do
-        new_amount = 142.99
-        expected_amount = new_amount + statement.total_amount
+        diff = 100
         record = FactoryBot.create(:statement_record, :amount => 52.15, :statement => statement)
-        record.update_attributes(:amount => new_amount)
-        expect(statement.reload.total_amount).to eq(expected_amount)
+        expect {
+          record.update_attributes(:amount => record.amount + diff)
+        }.to change{ statement.reload.total_amount }.by(diff)
       end
     end
 

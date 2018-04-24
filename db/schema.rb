@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 20180310222025) do
 
-  create_table "audits", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "audits", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer  "auditable_id"
     t.string   "auditable_type"
     t.integer  "associated_id"
@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 20180310222025) do
     t.index ["user_id", "user_type"], name: "user_index", using: :btree
   end
 
-  create_table "bank_accounts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "bank_accounts", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name"
     t.integer  "user_id"
     t.integer  "statement_parser_id"
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20180310222025) do
     t.index ["user_id"], name: "fk_rails_92daa8a387", using: :btree
   end
 
-  create_table "bank_statements", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "bank_statements", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer  "user_id",                                                  null: false
     t.integer  "bank_account_id",                                          null: false
     t.integer  "month",                                                    null: false
@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(version: 20180310222025) do
     t.index ["user_id"], name: "fk_rails_39a1c6060b", using: :btree
   end
 
-  create_table "statement_parsers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "statement_parsers", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name",                                 null: false
     t.text     "description",            limit: 65535
     t.string   "type"
@@ -68,7 +68,7 @@ ActiveRecord::Schema.define(version: 20180310222025) do
     t.index ["name"], name: "index_statement_parsers_on_name", unique: true, using: :btree
   end
 
-  create_table "statement_record_categories", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "statement_record_categories", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name",                      null: false
     t.integer  "user_id",                   null: false
     t.string   "color"
@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(version: 20180310222025) do
     t.index ["user_id"], name: "fk_rails_9942527c5c", using: :btree
   end
 
-  create_table "statement_record_category_rules", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "statement_record_category_rules", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "name",                            null: false
     t.string   "type",                            null: false
     t.integer  "user_id",                         null: false
@@ -93,7 +93,7 @@ ActiveRecord::Schema.define(version: 20180310222025) do
     t.index ["user_id"], name: "fk_rails_15b479eb25", using: :btree
   end
 
-  create_table "statement_records", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "statement_records", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.integer  "user_id",                                   null: false
     t.integer  "statement_id",                              null: false
     t.integer  "category_id"
@@ -109,7 +109,7 @@ ActiveRecord::Schema.define(version: 20180310222025) do
     t.index ["user_id"], name: "fk_rails_15f285568f", using: :btree
   end
 
-  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "users", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
     t.string   "email",                  default: "", null: false
     t.string   "name",                   default: "", null: false
     t.string   "encrypted_password",     default: "", null: false

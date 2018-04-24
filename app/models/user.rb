@@ -5,7 +5,7 @@ class User < ApplicationRecord
   has_many :bank_statements, :dependent => :destroy
   has_many :statement_records, :dependent => :destroy
   has_many :statement_record_categories, :dependent => :destroy
-  has_many :statement_record_category_rules, :dependent => :destroy, :class_name => StatementRecordCategoryRules::CategoryRuleBase
+  has_many :statement_record_category_rules, :dependent => :destroy, :class_name => StatementRecordCategoryRules::CategoryRuleBase.to_s
 
   validates :name, presence: true
 

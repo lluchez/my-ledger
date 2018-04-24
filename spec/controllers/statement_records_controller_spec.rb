@@ -21,14 +21,14 @@ RSpec.describe StatementRecordsController, type: :controller do
       sign_in(user)
 
       get :index, params: {}
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "should return a success JSON response" do
       sign_in(user)
 
       get :index, params: {}, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
 
       data = JSON.parse(response.body)
       expect(data.count).to eq(1)
@@ -52,7 +52,7 @@ RSpec.describe StatementRecordsController, type: :controller do
       bank_statement = FactoryBot.create(:bank_statement, :user_id => user.id)
 
       get :index, params: {:bank_statement_id => bank_statement.id}
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
@@ -68,7 +68,7 @@ RSpec.describe StatementRecordsController, type: :controller do
       sign_in(user)
 
       get :new, params: {}
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
@@ -108,7 +108,7 @@ RSpec.describe StatementRecordsController, type: :controller do
 
       [:show, :edit].each do |method|
         get method, params: {:id => statement_record.id}
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 
@@ -116,7 +116,7 @@ RSpec.describe StatementRecordsController, type: :controller do
       sign_in(owner)
 
       get :show, params: {:id => statement_record.id}, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
 
       assert_json_statement_record(hash_from_json_body, statement_record)
     end
@@ -136,7 +136,7 @@ RSpec.describe StatementRecordsController, type: :controller do
 
       [:show, :edit].each do |method|
         get method, params: {:id => statement_record.id, :bank_statement_id => statement_record.statement_id}
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
   end
@@ -217,7 +217,7 @@ RSpec.describe StatementRecordsController, type: :controller do
 
       expect {
         post :create, params: {param_key => statement_record_attrs}, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       }.to change { user.statement_records.count }.by(1)
 
       assert_json_statement_record(hash_from_json_body, assigns[:statement_record])
@@ -299,7 +299,7 @@ RSpec.describe StatementRecordsController, type: :controller do
 
       expect {
         put :update, params: {:id => my_statement_record.id, param_key => {:amount => new_amount}}, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       }.to change { my_statement_record.reload.amount }.to(new_amount)
 
       json = assert_json_statement_record(hash_from_json_body, my_statement_record.reload)
@@ -376,7 +376,7 @@ RSpec.describe StatementRecordsController, type: :controller do
 
       expect {
         delete :destroy, params: {:id => my_statement_record.id}, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       }.to change { StatementRecord.count }.by(-1)
 
       expect(response.body).to be_blank
@@ -425,7 +425,7 @@ RSpec.describe StatementRecordsController, type: :controller do
       sign_in(owner)
 
       get :upload_csv, params: {:bank_statement_id => bank_statement.id}
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 

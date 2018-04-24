@@ -20,14 +20,14 @@ RSpec.describe StatementParsersController, type: :controller do
       sign_in(user)
 
       get :index, params: {}
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "should return a success JSON response" do
       sign_in(user)
 
       get :index, params: {}, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
 
       data = JSON.parse(response.body)
       expect(data.count).to eq(1)
@@ -49,7 +49,7 @@ RSpec.describe StatementParsersController, type: :controller do
       sign_in(user)
 
       get :new, params: {}
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
@@ -79,7 +79,7 @@ RSpec.describe StatementParsersController, type: :controller do
 
       [:show, :edit].each do |method|
         get method, params: {:id => parser.id}
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 
@@ -87,7 +87,7 @@ RSpec.describe StatementParsersController, type: :controller do
       sign_in(user)
 
       get :show, params: {:id => parser.id}, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
 
       assert_json_statement_parser(hash_from_json_body, parser)
     end
@@ -138,7 +138,7 @@ RSpec.describe StatementParsersController, type: :controller do
 
       expect {
         post :create, params: {param_key => parser_attrs}, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       }.to change { StatementParsers::ParserBase.count }.by(1)
 
       assert_json_statement_parser(hash_from_json_body, assigns[:parser])
@@ -199,7 +199,7 @@ RSpec.describe StatementParsersController, type: :controller do
 
       expect {
         put :update, params: {:id => parser.id, param_key => {:name => new_name}}, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       }.to change { parser.reload.name }.to(new_name)
 
       json = assert_json_statement_parser(hash_from_json_body, parser.reload)
@@ -254,7 +254,7 @@ RSpec.describe StatementParsersController, type: :controller do
 
       expect {
         delete :destroy, params: {:id => parser.id}, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       }.to change { StatementParsers::ParserBase.count }.by(-1)
 
       expect(response.body).to be_blank

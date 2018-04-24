@@ -2,8 +2,8 @@ class StatementRecordCategoryRules::CategoryRuleBase < ApplicationRecord
   before_destroy :before_destroying # to declare before any `:has_many :dependend => :destroy`
 
   belongs_to :user, :optional => true
-  belongs_to :category, :optional => true, :class_name => StatementRecordCategory, :foreign_key => :category_id
-  has_many :records, :class_name => StatementRecord, :foreign_key => :category_rule_id
+  belongs_to :category, :optional => true, :class_name => StatementRecordCategory.to_s, :foreign_key => :category_id
+  has_many :records, :class_name => StatementRecord.to_s, :foreign_key => :category_rule_id
 
   audited :associated_with => :category
 
