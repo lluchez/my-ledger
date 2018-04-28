@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   resources :statement_parsers
   devise_for :users, :controllers => { registrations: 'registrations', sessions: 'sessions' }
 
+  match "/test", :to => "test#index", :via => :all
+
   root 'application#index'
 
   match "/404", :to => "errors#not_found", :via => :all

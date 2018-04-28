@@ -1,0 +1,61 @@
+{
+  "name": "my-ledger",
+  "version": "0.0.1",
+  "description": "Webpack build",
+  "main": "webpack/app.jsx",
+  "directories": {
+    "lib": "lib"
+  },
+  "babel": {
+    "presets": [
+      "react",
+      "es2015",
+      "stage-0"
+    ],
+    "plugins": [
+      "transform-decorators-legacy"
+    ]
+  },
+  "scripts": {
+    "clean": "rm -rf /public/assets/*",
+    "start": "webpack --progress --colors --watch --config=webpack/webpack.config.js --env=development",
+    "build:prod": "webpack --config=webpack/webpack.config.js -p --env=production",
+    "build:dev": "webpack --progress --colors --config=webpack/webpack.config.js --env=development",
+    "generate-version": "echo \"ENV['BUILD_VERSION'] = '$SOURCE_VERSION'.presence || '`git rev-parse HEAD`'\" > config/initializers/build_version.rb",
+    "heroku-postbuild": "npm rebuild node-sass && npm run build:prod && npm run generate-version"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lluchez/my-ledger.git"
+  },
+  "author": "Lionel Luchez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lluchez/my-ledger/issues"
+  },
+  "homepage": "https://github.com/lluchez/my-ledger#readme",
+  "dependencies": {
+    "autoprefixer": "^6.7.7",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "classnames": "^2.2.5",
+    "css-loader": "^0.28.7",
+    "file-loader": "^1.1.11",
+    "mini-css-extract-plugin": "^0.4.0",
+    "node-sass": "^4.9.0",
+    "react": "^16.3.2",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^16.3.2",
+    "rollbar-sourcemap-webpack-plugin": "^2.2.0",
+    "sass-loader": "^7.0.1",
+    "webpack": "^4.6.0"
+  },
+  "devDependencies": {
+    "babel-cli": "*",
+    "webpack-cli": "*"
+  }
+}

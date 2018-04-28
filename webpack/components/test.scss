@@ -1,0 +1,14 @@
+.root {
+  .test {
+    display: inline-block;
+    background-color: red;
+    padding: 6px;
+    &.bold {
+      font-weight: bold;
+      color: white;
+    }
+  }
+  > div {
+    margin: 1em;
+  }
+}
