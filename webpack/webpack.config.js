@@ -1,11 +1,12 @@
 const webpack = require('webpack')
 // const { LoaderOptionsPlugin, ContextReplacementPlugin, DefinePlugin } = webpack
 
-const autoprefixer = require('autoprefixer')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const autoprefixer = require('autoprefixer') // for browser specific tags
 
-const path = require('path')
-const rootPath = path.join(__dirname, '..')
+const path = require('path'),
+  rootPath = path.join(__dirname, '..'),
+  cssPath = path.resolve(__dirname, "css")
 
 
 const ENVIRONMENTS = [
@@ -15,6 +16,37 @@ const ENVIRONMENTS = [
 ]
 
 const isDev = (env) => env === 'development'
+
+const cssLoader = (enableModules, env) => {
+  const options = {
+    sourceMap: true
+  }
+  const cssLoaderOptions = Object.assign({
+    modules: enableModules,
+    importLoader: 2,
+    minimize: !isDev(env),
+    camelCase: enableModules,
+    localIdentName: enableModules && (isDev(env) ? "[name]__[local]___[hash:base64:5]" : "[hash:base64]"),
+  }, options)
+
+  return [
+    MiniCssExtractPlugin.loader,
+    {
+      loader: "css-loader",
+      options: cssLoaderOptions
+    },
+    {
+      loader: 'postcss-loader',
+      options: Object.assign({
+        plugins: () => [autoprefixer],
+      }, options)
+    },
+    {
+      loader: 'sass-loader',
+      options: options
+    }
+  ]
+}
 
 module.exports =  (env) => {
   console.log("Webpack: environment:", env)
@@ -43,21 +75,16 @@ module.exports =  (env) => {
         {
           test: /\.s?css$/,
           exclude: /node_modules/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            {
-              loader: "css-loader",
-              options: {
-                modules: true,
-                sourceMap: true,
-                importLoader: 2,
-                minimize: !isDev(env),
-                camelCase: true,
-                localIdentName: isDev(env) ? "[name]__[local]___[hash:base64:5]" : "[hash:base64]"
-              }
-            },
-            'sass-loader',
-          ]
+          include: [cssPath],
+          use: cssLoader(false, env)
+        },
+        {
+          test: /\.s?css$/,
+          exclude: [
+            /node_modules/, // NOTE: for path separators, use [\/\\] (to also support Windows)
+            cssPath
+          ],
+          use: cssLoader(true, env)
         },
         {
           test: /\.(eot|svg|ttf|woff|woff2|png|gif)$/,
@@ -67,7 +94,7 @@ module.exports =  (env) => {
     },
     resolve: {
       modules: ['webpack/', 'node_modules/'],
-      extensions: ['.js', 'jsx']
+      extensions: ['.js', '.jsx']
     },
     plugins: [
       new MiniCssExtractPlugin({
