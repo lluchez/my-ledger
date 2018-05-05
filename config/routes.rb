@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   resources :statement_parsers
   devise_for :users, :controllers => { registrations: 'registrations', sessions: 'sessions' }
 
-  match "/test", :to => "test#index", :via => :all
+  get '/app(/*id)' => "app#index", :via => :all
 
   root 'application#index'
 

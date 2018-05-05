@@ -57,7 +57,7 @@ module.exports =  (env) => {
     target: 'web',
     devtool: isDev(env) ? 'source-map' : 'nosources-source-map',
     mode: env,
-    entry: './webpack/app.js',
+    entry: './webpack/index.js',
     stats: {
       colors: true
     },

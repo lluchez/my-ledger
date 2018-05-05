@@ -1,0 +1,73 @@
+@import './variables.scss';
+
+.navbar {
+  background-color: $primary-background-color;
+  border-radius: 0;
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    color: $primary-color-with-background;
+    font-weight: bold;
+    text-shadow: 1px 2px rgba(0,0,0,0.4);
+
+    &:hover, &:focus {
+      color: $primary-color-with-background;
+      outline: 0;
+    }
+
+    img {
+      padding: 7px 14px;
+    }
+  }
+
+  .navbar-logo {
+    width: 32px;
+    display: inline-block;
+    margin-top: -5px;
+    padding-right: 10px;
+    box-sizing: content-box;
+  }
+
+  .navbar-nav {
+    i {
+      margin-right: 4px;
+    }
+    & > li > a {
+      &:not(:hover) {
+        color: $primary-color-with-background;
+      }
+    }
+  }
+
+  .dropdown-menu>.active>a, .dropdown-menu>.active>a:focus, .dropdown-menu>.active>a:hover {
+    background-color: $primary-background-color;
+  }
+}
+
+// small screens
+@media (max-width: 767px) {
+  .navbar {
+    .dropdown-header {
+      color: #444;
+    }
+    .navbar-toggle {
+      .icon-bar {
+        background-color: white;
+      }
+      &:hover, &:focus {
+        background-color: $primary-background-color-hover;
+      }
+    }
+    .navbar-nav > .open {
+      .dropdown-menu > li > a {
+        color: $primary-color-with-background;
+      }
+      & > a, & > a:hover, & > a:focus {
+        background-color: $primary-background-color-hover;
+        color: $primary-color-with-background;
+      }
+    }
+  }
+}
