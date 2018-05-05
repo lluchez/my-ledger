@@ -3,11 +3,9 @@ import { BrowserRouter, Switch, Route, Redirect, NavLink } from 'react-router-do
 import Header from './header/header'
 import styles from './app.scss'
 
-const PrimaryLayout = () => (
-  <div className="primary-layout">
-    <header>
-      <Header />
-    </header>
+const PrimaryLayout = (props) => (
+  <div>
+    <Header {...props} />
     <main>
       <Switch>
         <Route path="/app/" exact component={HomePage} />
@@ -27,9 +25,9 @@ const BankStatementsPage = () => <div>Bank Statements Page</div>
 const TransactionsPage = () => <div>Transactions Page</div>
 const AuditsPage = () => <div>Audits Page</div>
 
-const App = () => (
+const App = (props) => (
   <BrowserRouter>
-    <PrimaryLayout />
+    <PrimaryLayout {...props} />
   </BrowserRouter>
 )
 

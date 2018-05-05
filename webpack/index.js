@@ -5,7 +5,6 @@ import App from './components/app'
 
 document.addEventListener("DOMContentLoaded", function() {
   console.log("in DOMContentLoaded")
-  const app = document.getElementById("app")
-  console.log('app', app)
-  ReactDOM.render(React.createElement(App, {}), app)
+  const app = document.getElementById("app"), props = JSON.parse(app.getAttribute("react-props"))
+  ReactDOM.render(React.createElement(App, props), app)
 })

@@ -6,7 +6,7 @@ import classnames from 'classnames'
 
 export default class Header extends React.Component {
   render() {
-    const logo_url = '/assets/logo.ico'
+    const {paths} = this.props
     const external_urls = [
       {text: 'Manage', iconClassName: 'glyphicon glyphicon-cog', items: [
         {text: 'Bank Accounts', url: '/app/bank_accounts', iconClassName: 'glyphicon glyphicon-book'},
@@ -24,7 +24,7 @@ export default class Header extends React.Component {
           <Navbar.Toggle />
           <Navbar.Brand>
             <NavLink to="/app/">
-              <img className="navbar-logo" src={logo_url} />
+              <img className="navbar-logo" src={paths.logo} />
               My Ledger
             </NavLink>
           </Navbar.Brand>
