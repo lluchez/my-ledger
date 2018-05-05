@@ -14,16 +14,28 @@
     <title>My Finance App</title>
     <%= favicon_link_tag 'logo.ico' %>
     <%= csrf_meta_tags %>
-    <script type="text/javascript" src="/assets/javascripts/main.js?v=<%= build_version %>"></script>
-    <link rel="stylesheet" type="text/css" href="<%= bootstrap_css_href %>" integrity="<%= bootstrap_css_sha %>" crossorigin="anonymous" />
-    <!-- <link rel="stylesheet" type="text/css" href="/assets/stylesheets/bootstrap-3.3.7.min.css" /> -->
-    <link rel="stylesheet" type="text/css" href="/assets/stylesheets/main.css?v=<%= build_version %>" />
+    <style>
+      #app-loader {
+        position: absolute;
+        left: 0; right: 0; top: 0; bottom: 0;
+        background: transparent url('<%= image_path("spinner.gif") %>') no-repeat center;
+        z-index: 2;
+      }
+      #app-loader.loaded {
+        display: none;
+      }
+    </style>
   </head>
 
   <body>
-    <div id="app" react-props="<%= react_props.to_json %>">
-      You shouldn't see that!
-      <%= yield %>
+    <div id="app" react-props="<%= react_props.to_json %>"></div>
+    <div id="app-loader"><%= yield %></div>
+    <div>
+      <!-- faster page load -->
+      <script type="text/javascript" src="/assets/javascripts/main.js?v=<%= build_version %>"></script>
+      <link rel="stylesheet" type="text/css" href="<%= bootstrap_css_href %>" integrity="<%= bootstrap_css_sha %>" crossorigin="anonymous" />
+      <!-- <link rel="stylesheet" type="text/css" href="/assets/stylesheets/bootstrap-3.3.7.min.css" /> -->
+      <link rel="stylesheet" type="text/css" href="/assets/stylesheets/main.css?v=<%= build_version %>" />
     </div>
   </body>
 </html>
