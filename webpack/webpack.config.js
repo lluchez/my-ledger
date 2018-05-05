@@ -6,6 +6,7 @@ const autoprefixer = require('autoprefixer') // for browser specific tags
 
 const path = require('path'),
   rootPath = path.join(__dirname, '..'),
+  entryPath = path.join(__dirname, 'index.js'),
   cssPath = path.resolve(__dirname, "css")
 
 
@@ -48,7 +49,7 @@ const cssLoader = (enableModules, env) => {
   ]
 }
 
-module.exports =  (env) => {
+module.exports = (env = 'development') => {
   console.log("Webpack: environment:", env)
   if (!ENVIRONMENTS.includes(env))
     throw new Error(`Environment ${env} is not supported.`)
@@ -57,7 +58,7 @@ module.exports =  (env) => {
     target: 'web',
     devtool: isDev(env) ? 'source-map' : 'nosources-source-map',
     mode: env,
-    entry: './webpack/index.js',
+    entry: entryPath,
     stats: {
       colors: true
     },

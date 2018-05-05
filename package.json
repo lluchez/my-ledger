@@ -19,8 +19,8 @@
   "scripts": {
     "clean": "rm -rf /public/assets/*",
     "start": "webpack --progress --colors --watch --config=webpack/webpack.config.js --env=development",
-    "build:prod": "webpack --config=webpack/webpack.config.js -p --env=production",
-    "build:dev": "webpack --progress --colors --config=webpack/webpack.config.js --env=development",
+    "build:prod": "webpack --config=webpack/webpack.config.js -p --env=production --display-error-details",
+    "build:dev": "webpack --progress --colors --config=webpack/webpack.config.js --env=development --display-error-details",
     "generate-version": "echo \"ENV['BUILD_VERSION'] = '$SOURCE_VERSION'.presence || '`git rev-parse HEAD`'\" > config/initializers/build_version.rb",
     "heroku-postbuild": "npm rebuild node-sass && npm run build:prod && npm run generate-version"
   },
@@ -61,6 +61,6 @@
   },
   "devDependencies": {
     "babel-cli": "*",
-    "webpack-cli": "*"
+    "webpack-cli": "^2.1.2"
   }
 }
