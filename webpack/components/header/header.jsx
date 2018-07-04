@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from 'prop-types'
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { NavLink } from 'react-router-dom'
@@ -75,4 +76,10 @@ export default class Header extends React.Component {
       <span key='text'>{text}</span>
     ]
   }
+}
+
+Header.propTypes = {
+  paths: PropTypes.shape({
+    logo: PropTypes.string
+  }).isRequired
 }
