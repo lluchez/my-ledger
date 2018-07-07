@@ -88,17 +88,25 @@ class BankStatementsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def bank_statement_params
-      params.require(:bank_statement).permit(:year, :month, :bank_account_id)
+      params.require(:bank_statement).permit(:year, :month, :bank_account_id, :records_text, :csv_parsing)
     rescue ActionController::ParameterMissing
       nil
     end
 
     def get_records_attributes
-      @bank_statement.get_records_attributes_from_raw_text(get_records_text)
-    end
-
-    def get_records_text
-      params.require(:bank_statement).permit(:records_text)[:records_text]
+      params = bank_statement_params
+      records_text = params.try(:[], :records_text)
+      csv_parsing  = params.try(:[], :csv_parsing)
+      return if records_text.blank?
+      if checked?(csv_parsing)
+        begin
+          {:attributes => BankStatementsCsvParser.new.parse(records_text)}
+        rescue CsvFileParsingException => e
+          {:errors => e.exceptions.map(&:message)}
+        end
+      else
+        @bank_statement.get_records_attributes_from_raw_text(records_text)
+      end
     end
 
     def create_bank_statement_and_records(records_attributes)
@@ -130,7 +138,7 @@ class BankStatementsController < ApplicationController
     def compute_records_attributes
       records_attributes = []
       if @bank_statement.valid?
-        records_attributes = get_records_attributes
+        records_attributes = get_records_attributes || {:attributes => []}
         if records_attributes[:errors].present?
           @bank_statement.errors.add(:records_text, records_attributes[:errors])
         end

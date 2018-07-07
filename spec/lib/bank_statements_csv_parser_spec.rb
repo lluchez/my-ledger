@@ -170,5 +170,12 @@ describe BankStatementsCsvParser do
       expect(lines.count).to eq(BANK_STATEMENT_CSV_FILE_VALID_ROWS_COUNT)
       expect(lines).to eq(BANK_STATEMENT_CSV_FILE_VALID_ROWS)
     end
+
+    it 'should properly parse a valid CSV buffer' do
+      lines = parser.parse(BANK_STATEMENT_CSV_VALID_TEXT)
+      expect(lines.class).to eq(Array)
+      expect(lines.count).to eq(BANK_STATEMENT_CSV_FILE_VALID_ROWS_COUNT)
+      expect(lines).to eq(BANK_STATEMENT_CSV_FILE_VALID_ROWS)
+    end
   end
 end

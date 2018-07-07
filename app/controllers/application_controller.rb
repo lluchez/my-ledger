@@ -50,4 +50,8 @@ class ApplicationController < ActionController::Base
     end
     flash[type].push(message)
   end
+
+  def checked?(value)
+    value.to_s.in?(['1', 'true'])
+  end
 end
