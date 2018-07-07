@@ -46,7 +46,7 @@ private
   end
 
   def parse_field(row, index, field_name)
-    self.send("parse_#{field_name}", row[field_name])
+    self.send("parse_#{field_name}", row[field_name] || row[field_name.humanize])
   rescue StandardError => e
     raise CsvRowParsingException.new(e.message, field_name, index)
   end
