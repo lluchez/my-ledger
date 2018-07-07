@@ -7,7 +7,7 @@
   form_url = {:controller => "statement_parsers", :action => is_editing ? 'update' : 'create'}
   form_html_opts = {:class => "form-horizontal", :data_type => "form-statement-parser"}
   submit_btn = is_editing ? "Update" : "Create"
-  glyphicon = "glyphicon #{is_editing ? 'glyphicon-pencil' : 'glyphicon-plus'}"
+  glyphicon = Icons::add_or_edit(is_editing)
 %>
 <ol class="breadcrumb">
   <li><a href="/">Home</a></li>
@@ -51,7 +51,7 @@
             <div class="input-group">
               <%= f.text_field :plain_text_regex, class: "form-control" %>
               <span class="input-group-btn">
-                <a class="btn btn-default" on-click-callback="regexpFormat"><i class="glyphicon glyphicon-info-sign"></i></a>
+                <a class="btn btn-default" on-click-callback="regexpFormat"><i class="<%= Icons::INFO %>"></i></a>
               </span>
             </div>
           </div>
@@ -63,7 +63,7 @@
             <div class="input-group">
               <%= f.text_field :plain_text_date_format, class: "form-control" %>
               <span class="input-group-btn">
-                <a class="btn btn-default" on-click-callback="helpRubyDateFormat"><i class="glyphicon glyphicon-info-sign"></i></a>
+                <a class="btn btn-default" on-click-callback="helpRubyDateFormat"><i class="<%= Icons::INFO %>"></i></a>
               </span>
             </div>
           </div>

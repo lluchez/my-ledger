@@ -62,10 +62,10 @@
   </div>
   <div class="panel-footer">
     <%= link_to(edit_btn_link, :class => "btn btn-success pull-right") do %>
-      <i class="glyphicon glyphicon-pencil"></i> Edit Transaction
+      <i class="<%= Icons::EDIT %>"></i> Edit Transaction
     <% end %>
     <%= link_to(del_btn_link, :class => "btn btn-danger pull-right", method: :delete, data: { confirm: 'Are you sure?' }) do %>
-      <i class="glyphicon glyphicon-trash"></i> Delete
+      <i class="<%= Icons::DELETE %>"></i> Delete
     <% end %>
   </div>
 </div>

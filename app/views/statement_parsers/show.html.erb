@@ -38,10 +38,10 @@
   </div>
   <div class="panel-footer">
     <%= link_to(edit_statement_parser_path(@parser), :class => "btn btn-success pull-right") do %>
-      <i class="glyphicon glyphicon-pencil"></i> Edit Statement Parser
+      <i class="<%= Icons::EDIT %>"></i> Edit Statement Parser
     <% end %>
     <%= link_to(statement_parser_path(@parser), :class => "btn btn-danger pull-right", method: :delete, data: { confirm: 'Are you sure?' }) do %>
-      <i class="glyphicon glyphicon-trash"></i> Delete
+      <i class="<%= Icons::DELETE %>"></i> Delete
     <% end %>
   </div>
 </div>
