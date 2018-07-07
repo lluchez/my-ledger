@@ -144,6 +144,18 @@ describe BankStatementsCsvParser do
         :amount => 155.55
       })
     end
+
+    it 'should return the correct hash when the row is correct even if column names are capitalized' do
+      expect(parser.send(:parse_line, {
+        "Description" => "Test",
+        "Date" => "2018-01-05",
+        "Amount" => "155.55"
+      }, 1)).to eq({
+        :description => "Test",
+        :date => Date.new(2018,1,5),
+        :amount => 155.55
+      })
+    end
   end
 
   describe '#parse' do
