@@ -43,4 +43,20 @@ RSpec.describe ApplicationController, type: :controller do
     end
   end
 
+  describe "#checked?" do
+    it 'should return true for all true values' do
+      expect(controller.send(:checked?, '1')).to eq(true)
+      expect(controller.send(:checked?, 1)).to eq(true)
+      expect(controller.send(:checked?, 'true')).to eq(true)
+      expect(controller.send(:checked?, true)).to eq(true)
+    end
+
+    it 'should return false for all falsey values' do
+      expect(controller.send(:checked?, '0')).to eq(false)
+      expect(controller.send(:checked?, 0)).to eq(false)
+      expect(controller.send(:checked?, 'false')).to eq(false)
+      expect(controller.send(:checked?, false)).to eq(false)
+    end
+  end
+
 end

@@ -24,13 +24,17 @@ class BankStatementsCsvParser
 
 private
 
-  def get_rows(csv_file)
-    rows = CSV.foreach(csv_file.path, headers: true)
+  def get_rows(csv_file_or_buffer)
+    if csv_file_or_buffer.respond_to?(:path)
+      rows = CSV.foreach(csv_file_or_buffer.path, headers: true)
+    else
+      rows = CSV.parse(csv_file_or_buffer, headers: true)
+    end
     rows.count # this is what will trigger the exception if any
     rows
   rescue StandardError => e
     new_exception = StandardError.new(get_translation("lib.bank_statements_csv_parser.invalid_csv_file", {message: e.message}))
-    raise CsvFileParsingException.new([new_exception], csv_file)
+    raise CsvFileParsingException.new([new_exception], csv_file_or_buffer)
   end
 
   def parse_line(row, index)

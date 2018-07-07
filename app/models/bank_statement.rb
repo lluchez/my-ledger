@@ -10,6 +10,7 @@ class BankStatement < ApplicationRecord
 
   # attr_accessible :records_attributes
   accepts_nested_attributes_for :records
+  attr_accessor :records_text, :csv_parsing
 
   validates_presence_of :user_id, :bank_account_id, :total_amount, :year
   validates_inclusion_of :month, :in => (1..12), :message => :invalid

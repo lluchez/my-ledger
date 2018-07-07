@@ -113,7 +113,8 @@ RSpec.describe BankStatementsController, type: :controller do
         :month => 1,
         :year => 2017,
         :bank_account_id => bank_account.id,
-        :records_text => file_fixture('plain_text_statements/chase_statement_valid.txt').read
+        :records_text => file_fixture('plain_text_statements/chase_statement_valid.txt').read,
+        :csv_parsing => "0"
       }
     end
 
@@ -179,6 +180,26 @@ RSpec.describe BankStatementsController, type: :controller do
       # expect(flash[:error]).to be_present
     end
 
+    it "should not create the bank statement if there are invalid records" do
+      sign_in(user)
+
+      expect {
+        post :create, params: {param_key => bank_statement_attrs.merge(:records_text => "Invalid text")}
+      }.to_not change { user.bank_statements.count }
+      expect(subject).to render_template(:new)
+      # expect(flash[:error]).to be_present
+    end
+
+    it "should not create the bank statement if there are invalid CSV records" do
+      sign_in(user)
+
+      expect {
+        post :create, params: {param_key => bank_statement_attrs.merge(:records_text => "Invalid text\nAbc", :csv_parsing => "1")}
+      }.to_not change { user.bank_statements.count }
+      expect(subject).to render_template(:new)
+      # expect(flash[:error]).to be_present
+    end
+
     it "should create the bank statement and returns a success response" do
       sign_in(user)
 
@@ -198,6 +219,16 @@ RSpec.describe BankStatementsController, type: :controller do
       }.to change { user.bank_statements.count }.by(1)
 
       assert_json_bank_statement(hash_from_json_body, assigns[:bank_statement])
+    end
+
+    it "should create the bank statement and returns a success response when passed valid CSV data" do
+      sign_in(user)
+
+      expect {
+        post :create, params: {param_key => bank_statement_attrs.merge(:records_text => BANK_STATEMENT_CSV_VALID_TEXT, :csv_parsing => "1")}
+      }.to change { user.bank_statements.count }.by(1)
+      expect(response).to redirect_to(bank_statement_url(assigns[:bank_statement]))
+      # expect(flash[:notice]).to be_present
     end
   end
 
