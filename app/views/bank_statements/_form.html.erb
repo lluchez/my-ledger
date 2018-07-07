@@ -27,6 +27,17 @@
       <%= render :partial => "layouts/form_errors_panel", :locals => {:object => bank_statement} %>
 
       <div class="form-group">
+        <%= f.label :bank_account_id, "Bank account:", class: css_col_label %>
+        <div class="<%= css_col_input %>">
+          <%= f.select :bank_account_id,
+            options_for_select(@bank_accounts, bank_statement.bank_account_id),
+            {:prompt => "<Select a Bank Account>"},
+            {:class => "form-control", :required => true}
+          %>
+        </div>
+      </div>
+
+      <div class="form-group">
         <%= f.label :month, "Period:", class: css_col_label %>
         <div class="col-md-4">
           <%=
@@ -46,18 +57,6 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <%= f.label :bank_account_id, "Bank account:", class: css_col_label %>
-        <div class="<%= css_col_input %>">
-          <%= f.select :bank_account_id,
-            options_for_select(@bank_accounts, bank_statement.bank_account_id),
-            {:prompt => "<Select a Bank Account>"},
-            {:class => "form-control", :required => true}
-          %>
-        </div>
-      </div>
-
-
        <% if bank_statement.new_record? %>
           <div class="form-group">
             <%= f.label :records_text, "Records:", class: css_col_label %>
@@ -69,7 +68,10 @@
           <div class="form-group">
             <label class="<%= css_col_label %>">Options:</label>
             <div class="<%= css_col_input %> cell-label">
-              <div><label class="reset"><%= f.check_box :csv_parsing %> Records are provided with CSV format</label></div>
+              <div>
+                <label class="reset"><%= f.check_box :csv_parsing %> Records are provided within CSV format</label>
+                <i class="<%= Icons::INFO %> cursor-pointer" data-toggle="modal" data-target="#csv-tips-modal"></i>
+              </div>
             </div>
           </div>
       <% end %>
@@ -83,3 +85,22 @@
     </div>
   </div>
 <% end %>
+
+<div class="modal" id="csv-tips-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header modal-header-primary">
+        <span class="modal-title">CSV Tips</span>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= render :partial => 'statement_records/csv_tips' %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+@import "../variables";
+
+.modal {
+  .modal-header {
+    &.modal-header-primary {
+      background-color: $primary-background-color;
+      border-color: $primary-background-color;
+      .modal-title {
+        color: $primary-color-with-background;
+      }
+    }
+    .modal-title {
+      display: inline;
+      font-weight: bold;
+      font-size: $font-size-h1;
+    }
+  }
+}
