@@ -19,7 +19,7 @@ class BankStatementsController < ApplicationController
 
   # GET /bank_statements/new
   def new
-    @bank_statement = BankStatement.new
+    @bank_statement = BankStatement.new(:bank_account_id => params[:bank_account_id])
   end
 
   # GET /bank_statements/1/edit
