@@ -31,7 +31,7 @@ class BankStatementsController < ApplicationController
     statement_params = bank_statement_params || {}
     @bank_statement = BankStatement.new(statement_params.merge(:user_id => current_user.id))
     records_attributes = compute_records_attributes
-    if statement_params.present? && create_bank_statement_and_records(records_attributes)
+    if statement_params.present? && @bank_statement.errors.blank? && create_bank_statement_and_records(records_attributes)
       respond_to do |format|
         format.html { redirect_to @bank_statement, :flash => {:notice => i18n_message(:created, {:name => @bank_statement.name})} }
         format.json { render :show, :status => :created, :location => @bank_statement }
@@ -133,9 +133,8 @@ class BankStatementsController < ApplicationController
         records_attributes = get_records_attributes
         if records_attributes[:errors].present?
           @bank_statement.errors.add(:records_text, records_attributes[:errors])
-        else
-          records_attributes = records_attributes[:attributes]
         end
+        records_attributes = records_attributes[:attributes]
       end
       records_attributes
     end
