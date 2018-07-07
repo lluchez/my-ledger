@@ -50,13 +50,13 @@
   </div>
   <div class="panel-footer">
     <%= link_to(edit_bank_account_path(@bank_account), :class => "btn btn-success pull-right") do %>
-      <i class="glyphicon glyphicon-pencil"></i> Edit Bank Account
+      <i class="<%= Icons::EDIT %>"></i> Edit Bank Account
     <% end %>
     <%= link_to(new_bank_statement_path(:bank_account_id => @bank_account.id), :class => "btn btn-primary pull-right") do %>
       <i class="<%= Icons::ADD %>"></i> New Statement
     <% end %>
     <%= link_to(bank_account_path(@bank_account), :class => "btn btn-danger pull-right", method: :delete, data: { confirm: 'Are you sure?' }) do %>
-      <i class="glyphicon glyphicon-trash"></i> Delete
+      <i class="<%= Icons::DELETE %>"></i> Delete
     <% end %>
   </div>
 </div>
