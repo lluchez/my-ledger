@@ -1,0 +1,37 @@
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <li class="active">Categories</li>
+</ol>
+
+<table class="<%= ApplicationController::TABLE_CLASS %> centered-except-first-col">
+  <thead>
+    <tr>
+      <th>Category Name</th>
+      <th>Icon</th>
+      <th>Color</th>
+      <th>Active</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @categories.each do |category| %>
+      <tr>
+        <td><%= link_to(category.name, category) %></td>
+        <td><i class="<%= category.icon %>"></i></td>
+        <td style="<%= "background-color: #{category.color};" if category.color.present? %>"></td>
+        <td><%= yes_no(category.active) %></td>
+        <td class="actions">
+          <%= link_to('', edit_statement_record_category_path(category), class: "icon icon-edit") %>
+          <%= link_to('', category, class: "icon icon-delete", method: :delete, data: { confirm: 'Are you sure?' }) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to(new_statement_record_category_path, class: "btn btn-primary pull-right") do %>
+  <i class="<%= Icons::ADD %>"></i> New Category
+<% end %>

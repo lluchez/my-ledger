@@ -3,6 +3,11 @@ require 'csv'
 class BankStatementsCsvParser
   include LocalesHelper
 
+  def initialize(user = nil)
+    @user = user
+    @categories = user.present? ? StatementRecordCategory.from_user(user) : []
+  end
+
   def parse(csv_file)
     rows = []
     errors = []
@@ -41,8 +46,9 @@ private
     {
       :description => parse_field(row, index, "description"),
       :date        => parse_field(row, index, "date"),
-      :amount      => parse_field(row, index, "amount")
-    }
+      :amount      => parse_field(row, index, "amount"),
+      :category_id => parse_field(row, index, "category"),
+    }.reject{ |k,v| v.nil? }
   end
 
   def parse_field(row, index, field_name)
@@ -78,6 +84,21 @@ private
     m = /^[\+\-]?[\d\, ]+(\.\d+)?+$/.match(amount)
     raise StandardError.new(translate_error_message(:amount, :invalid_format)) unless m.present?
     amount.gsub(/[^\d\.\-+]/, '').to_d
+  end
+
+  def parse_category(category_name)
+    if category_name.blank? || @user.blank?
+      nil
+    else
+      category_name.strip!
+      category = @categories.find { |c| c.name.strip.casecmp(category_name).zero? }
+      # TO DO: conditionally create the category when not found (if the user wants so)
+      # if category.nil?
+      #   category = StatementRecordCategory.create(:name => category_name, :user_id => @user.id)
+      #   @categories << category
+      # end
+      category.try(:id)
+    end
   end
 
   def translate_error_message(attribute, key = :blank)

@@ -1,0 +1,71 @@
+<%
+  css_col_label = "col-md-4 control-label"
+  css_col_input = "col-md-8"
+  type = "Category"
+  is_editing = statement_record_category.persisted?
+  title = is_editing ? "Editing #{statement_record_category.name}" : "New #{type}"
+  submit_btn = is_editing ? "Update" : "Create"
+  glyphicon = Icons::add_or_edit(is_editing)
+%>
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <li><%= link_to("Catgeories", statement_record_categories_path) %></li>
+  <li class="active"><%= title %></li>
+</ol>
+
+<%= form_for(statement_record_category, :html => {:class => "form-horizontal", :data_type => "form-statement-record-category"}) do |f| %>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <i class="icon <%= Icons::STATEMENT_RECORD_CATEGORY %>"></i>
+      <%= title %>
+    </div>
+    <div class="panel-body">
+      <%= render :partial => "layouts/form_errors_panel", :locals => {:object => statement_record_category} %>
+
+      <div class="form-group">
+        <%= f.label :name, "Category name:", class: css_col_label %>
+        <div class="<%= css_col_input %>">
+          <%= f.text_field :name, class: "form-control", :required => true %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :color, "Color:", class: css_col_label %>
+        <div class="<%= css_col_input %>">
+          <div class="input-group">
+            <%= f.text_field :color, class: "form-control" %>
+            <span class="input-group-btn">
+              <a class="btn btn-default" on-click-callback="helpColor"><i class="<%= Icons::INFO %>"></i></a>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :icon, "Icon (CSS classname):", class: css_col_label %>
+        <div class="<%= css_col_input %>">
+          <div class="input-group">
+            <%= f.text_field :icon, class: "form-control" %>
+            <span class="input-group-btn">
+              <a class="btn btn-default" on-click-callback="helpIcon"><i class="<%= Icons::INFO %>"></i></a>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :active, "Active:", class: css_col_label %>
+        <div class="<%= css_col_input %> cell-label">
+          <label class="reset"><%= f.check_box :active %> Active (disabled categories won't be shown)</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-footer">
+      <button type="submit" class="btn btn-success pull-right">
+        <%= submit_btn %>
+        <i class="<%= glyphicon %>"></i>
+      </button>
+    </div>
+  </div>
+<% end %>

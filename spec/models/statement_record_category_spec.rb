@@ -7,6 +7,20 @@ describe StatementRecordCategory do
     it { should have_many(:records) }
     it { should have_many(:rules) }
     it { should validate_presence_of(:name) }
+
+    it { should allow_value('').for(:icon) }
+    it { should allow_value(nil).for(:icon) }
+    it { should allow_value('').for(:color) }
+    it { should allow_value(nil).for(:color) }
+    it { should allow_value('rgb(1,2,3)').for(:color) }
+    it { should allow_value('rgb(255,255,255)').for(:color) }
+    it { should allow_value('#0Af').for(:color) }
+    it { should allow_value('#00AAff').for(:color) }
+    it { should_not allow_value('anything').for(:color) }
+    it { should_not allow_value('rgb (1,1,1)').for(:color) }
+    it { should_not allow_value('rgb(1000,1,1)').for(:color) }
+    it { should_not allow_value('#1').for(:color) }
+    it { should_not allow_value('#1234').for(:color) }
   end
 
   describe 'audited' do

@@ -61,6 +61,17 @@
           <%= f.text_field :amount, class: "form-control", :autocomplete => :off, :required => true %>
         </div>
       </div>
+
+      <div class="form-group">
+        <%= f.label :category_id, "Category:", class: css_col_label %>
+        <div class="<%= css_col_input %>">
+          <%= f.select :category_id,
+            options_for_select(@categories, statement_record.category_id),
+            {:prompt => "<Select a Category>", :include_blank => '<None>'},
+            {:class => "form-control"}
+          %>
+        </div>
+      </div>
     </div>
 
     <div class="panel-footer">

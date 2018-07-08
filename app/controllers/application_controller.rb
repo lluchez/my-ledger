@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include LocalesHelper
+  helper ViewsHelper
 
   protect_from_forgery with: :exception
 

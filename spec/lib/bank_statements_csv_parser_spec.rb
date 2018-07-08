@@ -9,7 +9,8 @@ def csv_row_parsing_exception(row_index, attribute, key)
 end
 
 describe BankStatementsCsvParser do
-  let(:parser) { BankStatementsCsvParser.new }
+  let(:user) { nil }
+  let(:parser) { BankStatementsCsvParser.new(user) }
 
   describe '#parse_description' do
     it 'should raise an Exception when an invalid value is provided' do
@@ -93,6 +94,29 @@ describe BankStatementsCsvParser do
     end
   end
 
+  describe '#parse_category' do
+    it 'should return nil when missing or when user is not provided to the parser' do
+      expect(parser.send(:parse_category, nil)).to be_nil
+      expect(parser.send(:parse_category, '')).to be_nil
+      expect(parser.send(:parse_category, '   ')).to be_nil
+      expect(parser.send(:parse_category, "Anything")).to be_nil
+    end
+
+    context 'parser initialized with a user' do
+      let(:user) { FactoryBot.create(:user) }
+      it 'should be able to find the category ID when existing' do
+        user_category = FactoryBot.create(:statement_record_category, :user => user, :name => "Travel")
+        other_user_category = FactoryBot.create(:statement_record_category, :name => "Other User Category")
+
+        expect(parser.send(:parse_category, user_category.name)).to eq(user_category.id)
+        expect(parser.send(:parse_category, user_category.name.upcase)).to eq(user_category.id)
+        expect(parser.send(:parse_category, " #{user_category.name} ")).to eq(user_category.id)
+        expect(parser.send(:parse_category, "Unknown")).to be_nil
+        expect(parser.send(:parse_category, other_user_category.name)).to be_nil
+      end
+    end
+  end
+
   describe '#parse_line' do
     it 'should raise a CsvRowParsingException when the description field is incorrect' do
       line = 55
@@ -145,15 +169,33 @@ describe BankStatementsCsvParser do
       })
     end
 
-    it 'should return the correct hash when the row is correct even if column names are capitalized' do
+    it 'should also return category_id when found' do
+      expect(parser).to receive(:parse_category).and_return(55)
       expect(parser.send(:parse_line, {
-        "Description" => "Test",
-        "Date" => "2018-01-05",
-        "Amount" => "155.55"
+        "description" => "Test",
+        "date" => "2018-01-05",
+        "amount" => "155.55",
+        "category" => "Travel"
       }, 1)).to eq({
         :description => "Test",
         :date => Date.new(2018,1,5),
-        :amount => 155.55
+        :amount => 155.55,
+        :category_id => 55
+      })
+    end
+
+    it 'should return the correct hash when the row is correct even if column names are capitalized' do
+      expect(parser).to receive(:parse_category).and_return(55)
+      expect(parser.send(:parse_line, {
+        "Description" => "Test",
+        "Date" => "2018-01-05",
+        "Amount" => "155.55",
+        "Category" => "Travel"
+      }, 1)).to eq({
+        :description => "Test",
+        :date => Date.new(2018,1,5),
+        :amount => 155.55,
+        :category_id => 55
       })
     end
   end

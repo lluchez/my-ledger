@@ -46,15 +46,18 @@
                 <th class="left-aligned">Description</th>
                 <th>Date</th>
                 <th>Amount</th>
+                <th>Category</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               <% @statement_records.each do |record| %>
+                <% category = link_to(record.category.name, statement_record_category_path(record.category)) if record.category.present? %>
                 <tr>
                   <td class="left-aligned"><%= link_to(record.description, bank_statement_statement_record_path(record.statement_id, record)) %></td>
                   <td><%= record.date %></td>
                   <td><%= number_to_currency(record.amount) %></td>
+                  <td><%= category %></td>
                   <td class="actions">
                     <%= link_to('', edit_bank_statement_statement_record_path(@bank_statement, record), class: "icon icon-edit") %>
                     <%= link_to('', bank_statement_statement_record_path(@bank_statement, record), class: "icon icon-delete", method: :delete, data: { confirm: 'Are you sure?' }) %>

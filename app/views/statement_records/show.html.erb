@@ -12,6 +12,8 @@
     edit_btn_link     = edit_statement_record_path(@statement_record)
     del_btn_link      = statement_record_path(@statement_record)
   end
+  category = @statement_record.category
+  category = link_to(category.name, statement_record_category_path(category)) if category.present?
 %>
 
 <ol class="breadcrumb">
@@ -57,6 +59,12 @@
       <div class="form-group">
         <div class="<%= css_col_label %>"><label>Amount</label></div>
         <div class="<%= css_col_data %>"><%= number_to_currency(@statement_record.amount) %></div>
+      </div>
+    </div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><label>Category</label></div>
+        <div class="<%= css_col_data %>"><%= category %></div>
       </div>
     </div>
   </div>

@@ -79,7 +79,7 @@ class BankStatementsController < ApplicationController
     end
 
     def list_statement_records
-      @statement_records = StatementRecord.from_user(current_user).where(:statement_id => @bank_statement.id).order('date DESC')
+      @statement_records = StatementRecord.from_user(current_user).includes(:category).where(:statement_id => @bank_statement.id).order('date DESC')
     end
 
     def list_months_names
@@ -100,7 +100,7 @@ class BankStatementsController < ApplicationController
       return if records_text.blank?
       if checked?(csv_parsing)
         begin
-          {:attributes => BankStatementsCsvParser.new.parse(records_text)}
+          {:attributes => BankStatementsCsvParser.new(current_user).parse(records_text)}
         rescue CsvFileParsingException => e
           {:errors => e.exceptions.map(&:message)}
         end

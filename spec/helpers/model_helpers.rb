@@ -15,7 +15,11 @@ MODELS = {
     :check_url => true
   },
   :statement_record => {
-    :props  => [:amount], #[:id, :amount, :date, :description, :statement_id],
+    :props  => [:id, :amount, :date, :description, :statement_id, :category_id],
+    :check_url => true
+  },
+  :statement_record_category => {
+    :props  => [:id, :name, :color, :icon, :active],
     :check_url => true
   }
 }
@@ -39,6 +43,10 @@ end
 
 def assert_json_statement_record(json, statement_record)
   assert_json_model(json, statement_record, :statement_record)
+end
+
+def assert_json_statement_record_category(json, category)
+  assert_json_model(json, category, :statement_record_category)
 end
 
 def assert_json_model(json, model, type)

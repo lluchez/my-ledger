@@ -44,6 +44,12 @@ en:
               missing_group: "Missing capturing group %{group_name}"
             plain_text_date_format:
               blank: "Date format is required for Plain Text parsers"
+        statement_record_category:
+          attributes:
+            base:
+              cant_delete_in_use: "This catgeory is used and cannot be removed now"
+            color:
+              invalid: "Invalid color. Expected formats: 'rgb(r,g,b)', '#08F' or '#0088FF'"
         statement_record_category_rules/category_rule_base:
           attributes:
             base:
@@ -104,6 +110,8 @@ en:
       type: "Bank statement"
     statement_parsers_controller:
       type: "Parser"
+    statement_record_categories_controller:
+      type: "Category"
     statement_records_controller:
       type: "Transaction"
       invalid_statement: "Invalid statement"
@@ -112,4 +120,6 @@ en:
   general:
     login: "Please log-in first..."
     connection_not_secure: "Your connection is not secure. Please use HTTPS instead."
+    yes_key: "Yes"
+    no_key: "No"
 

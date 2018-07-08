@@ -212,15 +212,18 @@ RSpec.describe StatementRecordsController, type: :controller do
       # expect(flash[:notice]).to be_present
     end
 
-    it "should create the bank record and returns a success JSON response" do
+    it "should create the statement record and returns a success JSON response" do
       sign_in(user)
+      category = FactoryBot.create(:statement_record_category)
+      attrs = statement_record_attrs.merge(:category_id => category.id)
 
       expect {
-        post :create, params: {param_key => statement_record_attrs}, format: :json
+        post :create, params: {param_key => attrs}, format: :json
         expect(response).to be_successful
       }.to change { user.statement_records.count }.by(1)
 
       assert_json_statement_record(hash_from_json_body, assigns[:statement_record])
+      expect(assigns[:statement_record].category_id).to eq(category.id)
     end
   end
 
@@ -293,7 +296,7 @@ RSpec.describe StatementRecordsController, type: :controller do
       expect(flash[:notice]).to be_present
     end
 
-    it "update the bank record and returns a success JSON response" do
+    it "update the statement record and returns a success JSON response" do
       sign_in(user)
       new_amount = 9.99
 

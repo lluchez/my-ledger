@@ -12,14 +12,23 @@ class StatementRecordCategory < ApplicationRecord
   scope :active, ->{ where(:active => true) }
 
   validates_presence_of :user_id, :name
+  validate :validate_color
 
   private
 
     def before_destroying
       where_clause = {:category_id => self.id}
       if StatementRecord.where(where_clause).any? || StatementRecordCategoryRules::CategoryRuleBase.active.where(where_clause).any?
-        errors.add(:base, "This category is used and cannot be removed now")
+        errors.add(:base, :cant_delete_in_use)
         throw :abort
+      end
+    end
+
+    def validate_color
+      if self.color.present?
+        unless /^(rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)|\#([\da-fA-F]{3}|[\da-fA-F]{6}))$/ =~ self.color
+          errors.add(:color, :invalid)
+        end
       end
     end
 end

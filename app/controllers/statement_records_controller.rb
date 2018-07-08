@@ -3,6 +3,7 @@ class StatementRecordsController < ApplicationController
   before_action :set_bank_statement # to be done before `set_statement_record`
   before_action :set_statement_record, :only => [:show, :edit, :update, :destroy]
   before_action :list_bank_accounts_with_statements, :only => [:new, :edit, :create, :update] # needs to include :create/:update as failure will not result in a redirection
+  before_action :list_categories, :only => [:new, :edit, :create, :update] # needs to include :create/:update as failure will not result in a redirection
 
   # GET /statement_records
   # GET /statement_records.json
@@ -16,7 +17,7 @@ class StatementRecordsController < ApplicationController
       query = query.includes(includes).joins(includes)
       order = "#{order}, bank_accounts.name"
     end
-    @statement_records = query.order(order)
+    @statement_records = query.includes(:category).order(order)
   end
 
   # GET /statement_records/1
@@ -77,6 +78,7 @@ class StatementRecordsController < ApplicationController
   end
 
   # GET /bank_statements/1/statement_records/upload_csv
+  # GET /statement_records/upload_csv
   def upload_csv
     list_bank_accounts_with_statements unless @bank_statement.present?
   end
@@ -109,9 +111,13 @@ class StatementRecordsController < ApplicationController
       @bank_accounts = BankAccount.from_user(current_user).includes(:statements).joins(:statements).order('bank_accounts.name, bank_statements.year DESC, bank_statements.month DESC')
     end
 
+    def list_categories
+      @categories = StatementRecordCategory.from_user(current_user).active.order(:name).map { |p| [p.name, p.id] }
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def statement_record_params
-      params.require(:statement_record).permit(:date, :description, :amount, :statement_id)
+      params.require(:statement_record).permit(:date, :description, :amount, :statement_id, :category_id)
     rescue ActionController::ParameterMissing
       nil
     end
@@ -150,7 +156,7 @@ class StatementRecordsController < ApplicationController
     end
 
     def import_records_from_csv
-      StatementRecord.import(params[:file], @bank_statement, params[:clear_existing_records].present?)
+      StatementRecord.import(params[:file], @bank_statement, params[:clear_existing_records].present?, current_user)
     rescue CsvFileParsingException => e
       @errors = e.exceptions.map(&:message)
       false

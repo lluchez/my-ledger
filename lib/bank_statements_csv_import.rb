@@ -1,8 +1,12 @@
 class BankStatementsCsvImport
   include LocalesHelper
 
+  def initialize(user = nil)
+    @user = user
+  end
+
   def import(bank_statement, csv_file, remove_existing_records)
-    records_data = BankStatementsCsvParser.new.parse(csv_file)
+    records_data = BankStatementsCsvParser.new(@user).parse(csv_file)
     begin
       ActiveRecord::Base.transaction do
         delete_existing_records(bank_statement) if remove_existing_records

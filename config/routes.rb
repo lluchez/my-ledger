@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       post :import_csv
     end
   end
+  resources :statement_record_categories
   resources :statement_parsers
   devise_for :users, :controllers => { registrations: 'registrations', sessions: 'sessions' }
 
