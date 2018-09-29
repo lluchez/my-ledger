@@ -5,6 +5,7 @@
   def internal_server_error ; render_error(500) ; end
 
   private
+
   def render_error(code)
     render("errors/#{code}", :status => code)
   end

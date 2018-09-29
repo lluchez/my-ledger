@@ -64,14 +64,14 @@ class StatementRecordCategoriesController < ApplicationController
 
   private
 
-    def set_category
-      @category = StatementRecordCategory.from_user(current_user).where(:id => params[:id]).last or not_found
-    end
+  def set_category
+    @category = StatementRecordCategory.from_user(current_user).where(:id => params[:id]).last or not_found
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def statement_record_category_params
-      params.require(:statement_record_category).permit(:name, :color, :icon, :active)
-    rescue ActionController::ParameterMissing
-      nil
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def statement_record_category_params
+    params.require(:statement_record_category).permit(:name, :color, :icon, :active)
+  rescue ActionController::ParameterMissing
+    nil
+  end
 end

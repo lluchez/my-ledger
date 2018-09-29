@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
   def not_found
     respond_to do |format|
       format.html { render :file => "#{Rails.root}/app/views/errors/404", :layout => true, :status => :not_found }

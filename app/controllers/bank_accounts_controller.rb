@@ -12,8 +12,7 @@ class BankAccountsController < ApplicationController
 
   # GET /bank_accounts/1
   # GET /bank_accounts/1.json
-  def show
-  end
+  def show; end
 
   # GET /bank_accounts/new
   def new
@@ -21,8 +20,7 @@ class BankAccountsController < ApplicationController
   end
 
   # GET /bank_accounts/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /bank_accounts
   # POST /bank_accounts.json
@@ -67,22 +65,23 @@ class BankAccountsController < ApplicationController
   end
 
   private
-    def set_bank_account
-      @bank_account = BankAccount.from_user(current_user).where(:id => params[:id]).last or not_found
-    end
 
-    def list_statement_parsers
-      @statement_parsers = StatementParsers::ParserBase.order(:name).map { |p| [p.name, p.id] }
-    end
+  def set_bank_account
+    @bank_account = BankAccount.from_user(current_user).where(:id => params[:id]).last or not_found
+  end
 
-    def list_bank_statements
-      @bank_statements = BankStatement.from_user(current_user).where(:bank_account_id => @bank_account.id).order('year DESC, month DESC')
-    end
+  def list_statement_parsers
+    @statement_parsers = StatementParsers::ParserBase.order(:name).map { |p| [p.name, p.id] }
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def bank_account_params
-      params.require(:bank_account).permit(:name, :statement_parser_id)
-    rescue ActionController::ParameterMissing
-      nil
-    end
+  def list_bank_statements
+    @bank_statements = BankStatement.from_user(current_user).where(:bank_account_id => @bank_account.id).order('year DESC, month DESC')
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def bank_account_params
+    params.require(:bank_account).permit(:name, :statement_parser_id)
+  rescue ActionController::ParameterMissing
+    nil
+  end
 end

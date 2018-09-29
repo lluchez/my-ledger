@@ -17,7 +17,5 @@
  *= require bootstraply/tables
  *= require bootstraply/panels
  *= require bootstraply/alert
+ *= require_self
  */
-
-@import "bootstrap-sprockets";
-@import "bootstrap";
