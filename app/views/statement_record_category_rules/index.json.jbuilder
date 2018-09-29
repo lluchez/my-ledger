@@ -1,0 +1,1 @@
+json.array! @category_rules, partial: 'statement_record_category_rules/statement_record_category_rule', as: :category_rule

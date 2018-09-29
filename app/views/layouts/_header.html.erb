@@ -40,6 +40,11 @@
 								<i class="<%= Icons::STATEMENT_RECORD_CATEGORY %>"></i>
 								Categories
 							<% end	%></li>
+							<li><%= link_to(statement_record_category_rules_path) do %>
+								<i class="<%= Icons::STATEMENT_RECORD_CATEGORY_RULE %>"></i>
+								Category Rules
+							<% end	%></li>
+							<li role="separator" class="divider"></li>
 							<li><%= link_to(audits_path) do %>
 								<i class="<%= Icons::AUDIT %>"></i>
 								Audits

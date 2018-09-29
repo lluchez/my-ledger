@@ -250,7 +250,7 @@ RSpec.describe StatementRecordCategoriesController, type: :controller do
       expect_to_render_404
     end
 
-    it "should return a 404 response when trying to delete someone else's account" do
+    it "should return a 404 response when trying to delete someone else's category" do
       sign_in(user)
 
       other_statement_record_category = FactoryBot.create(:statement_record_category)
@@ -260,7 +260,7 @@ RSpec.describe StatementRecordCategoriesController, type: :controller do
       expect_to_render_404
     end
 
-    it "should gracefully fail if the account cannot be removed" do
+    it "should gracefully fail if the category cannot be removed" do
       sign_in(user)
       allow_any_instance_of(StatementRecordCategory).to receive(:destroy).and_return false
 

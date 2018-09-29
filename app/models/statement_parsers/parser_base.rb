@@ -12,8 +12,22 @@ class StatementParsers::ParserBase < ApplicationRecord
   self.inheritance_column = :type
   self.table_name = "statement_parsers"
 
+  def type_formatted
+    self.class.types_hash[self.type]
+  end
+
   def self.types
     %w(PlainTextParser)
+  end
+
+  def self.types_hash
+    {
+      'PlainTextParser' => 'Plain Text Parser'
+    }
+  end
+
+  def self.types_for_collection
+    hash_to_collection(types_hash)
   end
 
   def self.store_full_sti_class

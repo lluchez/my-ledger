@@ -18,7 +18,7 @@
     <div class="form-horizontal">
       <div class="form-group">
         <div class="<%= css_col_label %>"><label>Type</label></div>
-        <div class="<%= css_col_data %>"><%= @parser.type %></div>
+        <div class="<%= css_col_data %>"><%= @parser.type_formatted %></div>
       </div>
       <%
         if @parser.class == StatementParsers::PlainTextParser

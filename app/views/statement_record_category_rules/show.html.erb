@@ -1,0 +1,57 @@
+<%
+  css_col_label = "col-sm-2 col-label"
+  css_col_data  = "col-sm-10"
+%>
+
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <li><%= link_to("Category", statement_record_category_rules_path) %></li>
+  <li class="active"><%= @category_rule.name %></li>
+</ol>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <i class="icon <%= Icons::STATEMENT_RECORD_CATEGORY_RULE %>"></i>
+    <%= @category_rule.name %>
+  </div>
+  <div class="panel-body">
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><label>Category</label></div>
+        <div class="<%= css_col_data %>"><%= @category_rule.category.try(:name) %></div>
+      </div>
+    </div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><label>Type</label></div>
+        <div class="<%= css_col_data %>"><%= @category_rule.type_formatted %></div>
+      </div>
+    </div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><label>Pattern</label></div>
+        <div class="<%= css_col_data %>"><%= @category_rule.pattern %></div>
+      </div>
+    </div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><label>Case Sensitive</label></div>
+        <div class="<%= css_col_data %>"><%= yes_no(@category_rule.case_sensitive) %></div>
+      </div>
+    </div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="<%= css_col_label %>"><label>Active</label></div>
+        <div class="<%= css_col_data %>"><%= yes_no(@category_rule.active) %></div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <%= link_to(edit_statement_record_category_rule_path(@category_rule), :class => "btn btn-success pull-right") do %>
+      <i class="<%= Icons::EDIT %>"></i> Edit Category Rule
+    <% end %>
+    <%= link_to(statement_record_category_rule_path(@category_rule), :class => "btn btn-danger pull-right", method: :delete, data: { confirm: 'Are you sure?' }) do %>
+      <i class="<%= Icons::DELETE %>"></i> Delete
+    <% end %>
+  </div>
+</div>

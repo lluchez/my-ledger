@@ -11,7 +11,7 @@ MODELS = {
     :check_url => true
   },
   :statement_parser => {
-    :props  => [:id, :name, :type, :plain_text_regex, :plain_text_date_format],
+    :props  => [:id, :name, :type, :type_formatted, :plain_text_regex, :plain_text_date_format],
     :check_url => true
   },
   :statement_record => {
@@ -20,6 +20,10 @@ MODELS = {
   },
   :statement_record_category => {
     :props  => [:id, :name, :color, :icon, :active],
+    :check_url => true
+  },
+  :statement_record_category_rule => {
+    :props  => [:id, :name, :type, :type_formatted, :category_id, :pattern, :case_sensitive, :active],
     :check_url => true
   }
 }
@@ -47,6 +51,10 @@ end
 
 def assert_json_statement_record_category(json, category)
   assert_json_model(json, category, :statement_record_category)
+end
+
+def assert_json_statement_record_category_rule(json, category_rule)
+  assert_json_model(json, category_rule, :statement_record_category_rule)
 end
 
 def assert_json_model(json, model, type)

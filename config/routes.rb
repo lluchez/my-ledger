@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     end
   end
   resources :statement_record_categories
+  resources :statement_record_category_rules
   resources :statement_parsers
   devise_for :users, :controllers => { registrations: 'registrations', sessions: 'sessions' }
 
