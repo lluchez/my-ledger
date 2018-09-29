@@ -11,8 +11,7 @@ class StatementRecordCategoryRulesController < ApplicationController
 
   # GET /statement_record_category_rules/1
   # GET /statement_record_category_rules/1.json
-  def show
-  end
+  def show; end
 
   # GET /statement_record_category_rules/new
   def new
@@ -20,8 +19,7 @@ class StatementRecordCategoryRulesController < ApplicationController
   end
 
   # GET /statement_record_category_rules/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /statement_record_category_rules
   # POST /statement_record_category_rules.json
@@ -66,18 +64,19 @@ class StatementRecordCategoryRulesController < ApplicationController
   end
 
   private
-    def set_category_rule
-      @category_rule = StatementRecordCategoryRules::CategoryRuleBase.includes(:category).from_user(current_user).find(params[:id])
-    end
 
-    def list_categories
-      @categories = StatementRecordCategory.from_user(current_user).active.order(:name).map { |p| [p.name, p.id] }
-    end
+  def set_category_rule
+    @category_rule = StatementRecordCategoryRules::CategoryRuleBase.includes(:category).from_user(current_user).find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def statement_params
-      params.require(:statement_record_category_rules_category_rule_base).permit(:name, :type, :category_id, :pattern, :case_insensitive, :active)
-    rescue ActionController::ParameterMissing
-      nil
-    end
+  def list_categories
+    @categories = StatementRecordCategory.from_user(current_user).active.order(:name).map { |p| [p.name, p.id] }
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def statement_params
+    params.require(:statement_record_category_rules_category_rule_base).permit(:name, :type, :category_id, :pattern, :case_insensitive, :active)
+  rescue ActionController::ParameterMissing
+    nil
+  end
 end

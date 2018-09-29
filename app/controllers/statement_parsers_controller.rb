@@ -14,8 +14,7 @@ class StatementParsersController < ApplicationController
 
   # GET /statement_parsers/1
   # GET /statement_parsers/1.json
-  def show
-  end
+  def show; end
 
   # GET /statement_parsers/new
   def new
@@ -23,8 +22,7 @@ class StatementParsersController < ApplicationController
   end
 
   # GET /statement_parsers/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /statement_parsers
   # POST /statement_parsers.json
@@ -69,14 +67,15 @@ class StatementParsersController < ApplicationController
   end
 
   private
-    def set_statement
-      @parser = StatementParsers::ParserBase.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def statement_params
-      params.require(:statement_parsers_parser_base).permit(:name, :description, :type, :plain_text_regex, :plain_text_date_format)
-    rescue ActionController::ParameterMissing
-      nil
-    end
+  def set_statement
+    @parser = StatementParsers::ParserBase.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def statement_params
+    params.require(:statement_parsers_parser_base).permit(:name, :description, :type, :plain_text_regex, :plain_text_date_format)
+  rescue ActionController::ParameterMissing
+    nil
+  end
 end

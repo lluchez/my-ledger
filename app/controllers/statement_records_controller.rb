@@ -97,71 +97,71 @@ class StatementRecordsController < ApplicationController
 
   private
 
-    def set_statement_record
-      @statement_record = StatementRecord.from_user(current_user).where(:id => params[:id]).last or not_found
-    end
+  def set_statement_record
+    @statement_record = StatementRecord.from_user(current_user).where(:id => params[:id]).last or not_found
+  end
 
-    def set_bank_statement
-      if params[:bank_statement_id].present?
-        @bank_statement = BankStatement.from_user(current_user).find_by_id(params[:bank_statement_id]) or not_found
+  def set_bank_statement
+    if params[:bank_statement_id].present?
+      @bank_statement = BankStatement.from_user(current_user).find_by_id(params[:bank_statement_id]) or not_found
+    end
+  end
+
+  def list_bank_accounts_with_statements
+    @bank_accounts = BankAccount.from_user(current_user).includes(:statements).joins(:statements).order('bank_accounts.name, bank_statements.year DESC, bank_statements.month DESC')
+  end
+
+  def list_categories
+    @categories = StatementRecordCategory.from_user(current_user).active.order(:name).map { |p| [p.name, p.id] }
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def statement_record_params
+    params.require(:statement_record).permit(:date, :description, :amount, :statement_id, :category_id)
+  rescue ActionController::ParameterMissing
+    nil
+  end
+
+  def verify_statement_id_from_attributes(attrs)
+    if attrs[:statement_id].present? || !@statement_record.persisted?
+      if BankStatement.from_user(current_user).find_by_id(attrs[:statement_id]).blank?
+        @statement_record.errors.add(:statement_id, :invalid)
       end
     end
+  end
 
-    def list_bank_accounts_with_statements
-      @bank_accounts = BankAccount.from_user(current_user).includes(:statements).joins(:statements).order('bank_accounts.name, bank_statements.year DESC, bank_statements.month DESC')
+  def redirect_to_saved_record(type)
+    if @bank_statement.present?
+      url = bank_statement_statement_record_path(@statement_record.statement_id, @statement_record)
+    else
+      url = @statement_record
     end
+    redirect_to(url, :flash => {:notice => i18n_message(type, {:name => @statement_record.name})})
+  end
 
-    def list_categories
-      @categories = StatementRecordCategory.from_user(current_user).active.order(:name).map { |p| [p.name, p.id] }
+  def get_index_page
+    if @bank_statement.present?
+      bank_statement_statement_records_url(@bank_statement)
+    else
+      statement_records_url
     end
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def statement_record_params
-      params.require(:statement_record).permit(:date, :description, :amount, :statement_id, :category_id)
-    rescue ActionController::ParameterMissing
-      nil
-    end
+  def validate_csv_import_params
+    @errors = []
+    @errors << i18n_message(:invalid_statement) unless @bank_statement.present?
+    @errors << i18n_message(:blank_csv_file) if params[:file].blank?
 
-    def verify_statement_id_from_attributes(attrs)
-      if attrs[:statement_id].present? || !@statement_record.persisted?
-        if BankStatement.from_user(current_user).find_by_id(attrs[:statement_id]).blank?
-          @statement_record.errors.add(:statement_id, :invalid)
-        end
-      end
-    end
+    @errors.blank?
+  end
 
-    def redirect_to_saved_record(type)
-      if @bank_statement.present?
-        url = bank_statement_statement_record_path(@statement_record.statement_id, @statement_record)
-      else
-        url = @statement_record
-      end
-      redirect_to(url, :flash => {:notice => i18n_message(type, {:name => @statement_record.name})})
-    end
-
-    def get_index_page
-      if @bank_statement.present?
-        bank_statement_statement_records_url(@bank_statement)
-      else
-        statement_records_url
-      end
-    end
-
-    def validate_csv_import_params
-      @errors = []
-      @errors << i18n_message(:invalid_statement) unless @bank_statement.present?
-      @errors << i18n_message(:blank_csv_file) if params[:file].blank?
-
-      @errors.blank?
-    end
-
-    def import_records_from_csv
-      StatementRecord.import(params[:file], @bank_statement, params[:clear_existing_records].present?, current_user)
-    rescue CsvFileParsingException => e
-      @errors = e.exceptions.map(&:message)
-      false
-    rescue StandardError => e
-      @errors = [e.message] # message is already sanitized and Rollbar raised
-      false
-    end
+  def import_records_from_csv
+    StatementRecord.import(params[:file], @bank_statement, params[:clear_existing_records].present?, current_user)
+  rescue CsvFileParsingException => e
+    @errors = e.exceptions.map(&:message)
+    false
+  rescue StandardError => e
+    @errors = [e.message] # message is already sanitized and Rollbar raised
+    false
+  end
 end
