@@ -3,8 +3,8 @@ FactoryBot.define do
     factory :plain_text_parser, :class => StatementParsers::PlainTextParser do
       type 'PlainTextParser'
       sequence(:name) { |n| "Plain Text Parser #{n}" }
-      plain_text_regex '(?<date>\d+/\d+) +(?<description>.*?) +(?<amount>[+\-]?[\d\.\,]+)'
-      plain_text_date_format '%m/%-d'
+      plain_text_regex '(?<date>\d{4}/\d{2}/\d{2}) +(?<description>.*?) +(?<amount>-?[\d\.]+)'
+      plain_text_date_format '%Y/%m/%d'
 
       factory :discover_parser do
         name 'Discover Credit Card Parser'
@@ -14,7 +14,7 @@ FactoryBot.define do
 
       factory :chase_parser do
         name 'Chase Credit Card Parser'
-        plain_text_regex '(?<date>\d+/\d+) +(?<description>.*?) +(?<amount>[+\-]?[\d\.\,]+)'
+        plain_text_regex '(?<date>\d+/\d+) +(?<description>.*?) +\$?(?<amount>[+\-]?[\d\.\,]+)'
         plain_text_date_format '%m/%-d'
       end
     end

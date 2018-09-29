@@ -90,25 +90,24 @@ describe StatementParsers::PlainTextParser do
 
       it 'should require all groups to be present' do
         expect{
-          parser.parse_line('01/01  1,234.56', line_number)
+          parser.parse_line('2017/01/01  1234.56', line_number)
         }.to raise_error(I18n.t("#{locales_prefix}.missing_groups", {:line_number => line_number, :missing_groups => 'description'}))
       end
 
       it 'should require the date to be valid' do
-        date = '99/99'
+        date = '2017/99/99'
         expect{
-          parser.parse_line("#{date} store 1,234.56", line_number)
+          parser.parse_line("#{date} store 1234.56", line_number)
         }.to raise_error(I18n.t("#{locales_prefix}.date_format",  {:line_number => line_number, :date => date}))
       end
     end
 
     context 'good data' do
       it 'should properly parse' do
-        attrs = parser.parse_line("01/01 store -1,234.56", line_number)
+        attrs = parser.parse_line("2017/01/02 store 1234.56", line_number)
         expect(attrs).to be
-        expect(attrs[:date].month).to eq(1)
-        expect(attrs[:date].day).to eq(1)
-        expect(attrs[:amount]).to eq(-1234.56)
+        expect(attrs[:date]).to eq(Date.new(2017,1,2))
+        expect(attrs[:amount]).to eq(1234.56)
         expect(attrs[:description]).to eq('store')
       end
     end

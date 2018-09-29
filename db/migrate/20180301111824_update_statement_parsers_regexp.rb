@@ -3,7 +3,7 @@ class UpdateStatementParsersRegexp < ActiveRecord::Migration[5.0]
     [
       { # Chase
         :old => '(?<date>d+/d+)? +(?<description>.*?)(?: +$)? +(?<amount>-?d+(?:.d+)?)',
-        :new => '(?<date>\d+/\d+) +(?<description>.*?) +(?<amount>[+\-]?[\d\.\,]+)'
+        :new => '(?<date>\d+/\d+) +(?<description>.*?) +\$?(?<amount>[+\-]?[\d\.\,]+)'
       },
       { # Discover
         :old => '(?<date>[A-Z][a-z]+ d+)(?: +[A-Z][a-z]+ +d+ +)(?<description>.*?)(?: +$)? +(?<amount>-?d+(?:.d+)?)',
