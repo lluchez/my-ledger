@@ -18,8 +18,23 @@ class StatementRecordCategoryRules::CategoryRuleBase < ApplicationRecord
 
   scope :active, ->{ where(:active => true) }
 
+  def type_formatted
+    self.class.types_hash[self.type]
+  end
+
   def self.types
     %w(TextCategoryRule RegexpCategoryRule)
+  end
+
+  def self.types_hash
+    {
+      'TextCategoryRule' => 'Contain Text',
+      'RegexpCategoryRule' => 'Regexp Matching'
+    }
+  end
+
+  def self.types_for_collection
+    hash_to_collection(types_hash)
   end
 
   def self.store_full_sti_class

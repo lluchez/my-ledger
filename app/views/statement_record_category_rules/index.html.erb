@@ -1,0 +1,37 @@
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  <li class="active">Category Rules</li>
+</ol>
+
+<table class="<%= ApplicationController::TABLE_CLASS %> centered-except-first-col">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Category</th>
+      <th>Type</th>
+      <th>Active</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @category_rules.each do |category_rule| %>
+      <tr>
+        <td><%= link_to(category_rule.name, statement_record_category_rule_path(category_rule)) %></td>
+        <td><%= category_rule.category.try(:name) %></td>
+        <td><%= category_rule.type_formatted %></td>
+        <td><%= category_rule.active ? 'Yes' : 'No' %></td>
+        <td class="actions">
+          <%= link_to('', edit_statement_record_category_rule_path(category_rule), class: "icon icon-edit") %>
+          <%= link_to('', statement_record_category_rule_path(category_rule), class: "icon icon-delete", method: :delete, data: { confirm: 'Are you sure?' }) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to(new_statement_record_category_rule_path, class: "btn btn-primary pull-right") do %>
+  <i class="<%= Icons::ADD %>"></i> New Category Rule
+<% end %>

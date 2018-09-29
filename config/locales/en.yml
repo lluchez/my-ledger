@@ -112,6 +112,8 @@ en:
       type: "Parser"
     statement_record_categories_controller:
       type: "Category"
+    statement_record_category_rules_controller:
+      type: "Category Rule"
     statement_records_controller:
       type: "Transaction"
       invalid_statement: "Invalid statement"

@@ -6,8 +6,8 @@ class Icons
   BANK_ACCOUNT = "glyphicon glyphicon-book"
   BANK_STATEMENT = "glyphicon glyphicon-list-alt"
   STATEMENT_RECORD = "glyphicon glyphicon-shopping-cart"
-  STATEMENT_RECORD_CATEGORY = "glyphicon glyphicon-glass"
-  STATEMENT_RECORD_CATEGORY_RULE = "glyphicon glyphicon-ok"
+  STATEMENT_RECORD_CATEGORY = "glyphicon glyphicon-tags"
+  STATEMENT_RECORD_CATEGORY_RULE = "glyphicon glyphicon-list"
 
   ADD    = "glyphicon glyphicon-plus"
   EDIT   = "glyphicon glyphicon-pencil"

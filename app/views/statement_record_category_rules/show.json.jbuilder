@@ -1,0 +1,1 @@
+json.partial! "statement_record_category_rules/statement_record_category_rule", category_rule: @category_rule

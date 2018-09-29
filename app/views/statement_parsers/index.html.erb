@@ -16,7 +16,7 @@
     <% @parsers.each do |parser| %>
       <tr>
         <td><%= link_to(parser.name, statement_parser_path(parser)) %></td>
-        <td><%= parser.type %></td>
+        <td><%= parser.type_formatted %></td>
         <td class="actions">
           <%= link_to('', edit_statement_parser_path(parser), class: "icon icon-edit") %>
           <%= link_to('', statement_parser_path(parser), class: "icon icon-delete", method: :delete, data: { confirm: 'Are you sure?' }) %>

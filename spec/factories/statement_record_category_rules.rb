@@ -3,6 +3,8 @@ FactoryBot.define do
     sequence(:name) { |n| "Rule #{n}" }
     # user
     # category { FactoryBot.create(:statement_record_category) }
+    pattern 'ABC'
+    case_sensitive false
 
     after(:build) do |category_rule|
       users = [category_rule.user, category_rule.category.try(:user)].compact.uniq
@@ -18,14 +20,10 @@ FactoryBot.define do
 
     factory :text_category_rule, :class => StatementRecordCategoryRules::TextCategoryRule do
       type 'TextCategoryRule'
-      pattern 'ABC'
-      case_insensitive false
     end
 
     factory :regexp_category_rule, :class => StatementRecordCategoryRules::RegexpCategoryRule do
       type 'RegexpCategoryRule'
-      pattern 'ABC'
-      case_insensitive false
     end
   end
 end

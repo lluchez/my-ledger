@@ -3,7 +3,7 @@ class StatementRecordCategoryRules::RegexpCategoryRule < StatementRecordCategory
   def validate_specific_fields
     if self.pattern.present?
       begin
-        ereg = Regexp.new(self.pattern)
+        ereg = Regexp.new(self.pattern, !self.case_sensitive)
       rescue RegexpError => e
         errors.add(:pattern, :invalid_regexp, {:err_msg => e.message})
       end

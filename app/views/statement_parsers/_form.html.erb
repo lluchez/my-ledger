@@ -33,7 +33,7 @@
       <div class="form-group">
         <%= f.label :name, "Type:", class: css_col_label %>
         <div class="<%= css_col_input %>">
-          <%= f.select :type, options_for_select(StatementParsers::ParserBase.types, statement_parser.type), {:prompt => "<Select a #{type}>"}, {:class => "form-control", :required => true} %>
+          <%= f.select :type, options_for_select(StatementParsers::ParserBase.types_for_collection, statement_parser.type), {:prompt => "<Select a #{type} Type>"}, {:class => "form-control", :required => true} %>
         </div>
       </div>
 

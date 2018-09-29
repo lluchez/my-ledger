@@ -17,7 +17,7 @@ describe StatementRecordCategoryRules::RegexpCategoryRule do
       it 'should require a valid regexp to parse statement records' do
         rule = StatementRecordCategoryRules::CategoryRuleBase.new(attrs.merge(:pattern => '('))
         expect(rule.valid?).to eq(false)
-        expect_to_have_error(rule, :pattern, :invalid_regexp, :err_msg => "end pattern with unmatched parenthesis: /(/")
+        expect_to_have_error(rule, :pattern, :invalid_regexp, :err_msg => "end pattern with unmatched parenthesis: /(/i")
       end
 
       it 'should accept valids regexp to parse statement records' do

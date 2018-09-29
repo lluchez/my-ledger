@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_08_160229) do
+ActiveRecord::Schema.define(version: 2018_09_29_155117) do
 
   create_table "audits", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "auditable_id"
@@ -86,7 +86,7 @@ ActiveRecord::Schema.define(version: 2018_07_08_160229) do
     t.integer "user_id", null: false
     t.integer "category_id", null: false
     t.string "pattern", null: false
-    t.boolean "case_insensitive"
+    t.boolean "case_sensitive", default: false, null: false
     t.boolean "active", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
