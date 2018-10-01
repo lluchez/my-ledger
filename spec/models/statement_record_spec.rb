@@ -58,4 +58,79 @@ describe StatementRecord do
     end
   end
 
+  describe '#find_matching_rule' do
+    let(:user) { FactoryBot.create(:user) }
+    let(:other_user_rule) { FactoryBot.create(:regexp_category_rule, :pattern => '.') }
+    let(:user_disabled_rule) { FactoryBot.create(:regexp_category_rule, :user => user, :pattern => '.', :active => false) }
+    let(:user_text_rule) { FactoryBot.create(:text_category_rule, :user => user, :pattern => 'def') }
+    let(:user_ereg_rule) { FactoryBot.create(:regexp_category_rule, :user => user, :pattern => '\d+') }
+
+    it 'should not match rules from other users' do
+      rules = [other_user_rule] # will actually create the rule(s)
+      record = described_class.new(:user => user, :description => "Something")
+      expect(record.find_matching_rule).to eq(nil)
+    end
+
+    it 'should not match disabled rules' do
+      rules = [user_disabled_rule] # will actually create the rule(s)
+      record = described_class.new(:user => user, :description => "Something")
+      expect(record.find_matching_rule).to eq(nil)
+    end
+
+    it 'should find matching active rules' do
+      rules = [other_user_rule, user_disabled_rule, user_text_rule, user_ereg_rule] # will actually create the rule(s)
+      expect(described_class.new(:user => user, :description => "abcdefgh").find_matching_rule).to eq(user_text_rule)
+      expect(described_class.new(:user => user, :description => "abc456").find_matching_rule).to eq(user_ereg_rule)
+    end
+  end
+
+  describe '#apply_matching_rule' do
+    let(:user) { FactoryBot.create(:user) }
+    let!(:rule) { FactoryBot.create(:regexp_category_rule, :user => user, :pattern => '\d+') }
+
+    it 'should not update category nor rule' do
+      record = FactoryBot.create(:statement_record, :user => user, :description => 'Not matching')
+      expect(record.category).to eq(nil)
+      expect(record.category_rule).to eq(nil)
+    end
+
+    it 'should not update category nor rule on updates when there is already a category set' do
+      category = FactoryBot.create(:statement_record_category, :user => user)
+      record = FactoryBot.create(:statement_record, :user => user, :description => 'Mercer 312', :category => category)
+      expect(record.category).to eq(category)
+      expect(record.category_rule).to eq(nil)
+    end
+
+    it 'should save a reference of the rule used and update the category' do
+      record = FactoryBot.create(:statement_record, :user => user, :description => 'Mercer 312')
+      expect(record.category).to eq(rule.category)
+      expect(record.category_rule).to eq(rule)
+    end
+
+    it 'should apply the rule upon updates too' do
+      record = FactoryBot.create(:statement_record, :user => user, :description => 'Something')
+      expect(record.category).to eq(nil)
+      expect(record.category_rule).to eq(nil)
+
+      record.update_attributes(:description => 'Mercer 312')
+      expect(record.category).to eq(rule.category)
+      expect(record.category_rule).to eq(rule)
+    end
+  end
+
+  describe '#unset_category_rule' do
+    let(:user) { FactoryBot.create(:user) }
+    let!(:rule) { FactoryBot.create(:regexp_category_rule, :user => user, :pattern => '\d+') }
+
+    it 'reset category_rule after changing the category manually' do
+      record = FactoryBot.create(:statement_record, :user => user, :description => 'Mercer 312')
+      expect(record.category).to eq(rule.category)
+      expect(record.category_rule).to eq(rule)
+
+      record.update_attributes(:category_id => nil)
+      expect(record.category).to eq(nil)
+      expect(record.category_rule).to eq(nil)
+    end
+  end
+
 end

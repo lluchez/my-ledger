@@ -45,21 +45,29 @@ class StatementRecordCategoryRules::CategoryRuleBase < ApplicationRecord
     type if self.types.include?(type)
   end
 
+  protected
+
+  def string_or_empty(text)
+    text.class == String ? text : ''
+  end
+
   private
-    def type_should_be_valid
-      if self.type.blank?
-        errors.add(:type, :blank)
-      elsif !self.class.types.include?(self.type)
-        errors.add(:type, :invalid)
-      end
-    end
 
-    def validate_specific_fields; end
-
-    def before_destroying
-      if StatementRecord.where(:category_rule_id => self.id).any?
-        errors.add(:base, :cant_delete_in_use)
-        throw :abort
-      end
+  def type_should_be_valid
+    if self.type.blank?
+      errors.add(:type, :blank)
+    elsif !self.class.types.include?(self.type)
+      errors.add(:type, :invalid)
     end
+  end
+
+  def validate_specific_fields; end
+
+  def before_destroying
+    if StatementRecord.where(:category_rule_id => self.id).any?
+      errors.add(:base, :cant_delete_in_use)
+      throw :abort
+    end
+  end
+
 end

@@ -66,7 +66,8 @@ class StatementRecordCategoryRulesController < ApplicationController
   private
 
   def set_category_rule
-    @category_rule = StatementRecordCategoryRules::CategoryRuleBase.includes(:category).from_user(current_user).find(params[:id])
+    # Note: adding `includes(:category)` will cause an Eager Load for HTML responses
+    @category_rule = StatementRecordCategoryRules::CategoryRuleBase.from_user(current_user).find(params[:id])
   end
 
   def list_categories

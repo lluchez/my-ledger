@@ -12,4 +12,8 @@ class StatementRecordCategoryRules::RegexpCategoryRule < StatementRecordCategory
     end
   end
 
+  def matches?(description)
+    Regexp.new(self.pattern, !self.case_sensitive).match(description).present?
+  end
+
 end

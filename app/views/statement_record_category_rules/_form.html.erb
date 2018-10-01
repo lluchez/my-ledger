@@ -33,7 +33,7 @@
       <div class="form-group">
         <%= f.label :name, "Category:", class: css_col_label %>
         <div class="<%= css_col_input %>">
-          <%= f.select :category_id, options_for_select(@categories, category_rule.category), {:prompt => "<Select a #{type}>"}, {:class => "form-control", :required => true} %>
+          <%= f.select :category_id, options_for_select(@categories, category_rule.category_id), {:prompt => "<Select a #{type}>"}, {:class => "form-control", :required => true} %>
         </div>
       </div>
 
