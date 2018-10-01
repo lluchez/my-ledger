@@ -48,11 +48,13 @@ describe StatementRecordCategoryRules::CategoryRuleBase do
 
   describe '#before_destroying' do
     let(:user) { FactoryBot.create(:user) }
-    let(:category) { FactoryBot.create(:statement_record_category, :user_id => user.id) }
+    let(:rule) { FactoryBot.create(:regexp_category_rule, :user => user) }
 
     it 'should prevent deletion of a rule if linked to a statement record' do
-      rule = FactoryBot.create(:regexp_category_rule, :user_id => user.id)
-      record = FactoryBot.create(:statement_record, :category_rule_id => rule.id, :user_id => user.id, :category_id => category.id)
+      record = FactoryBot.create(:statement_record, :user_id => user.id, :category_id => rule.category_id, :category_rule_id => rule.id)
+      expect(record.category).to eq(rule.category)
+      expect(record.category_rule).to eq(rule)
+
       expect {
         rule.destroy
       }.to_not change { StatementRecordCategoryRules::CategoryRuleBase.count }
@@ -62,6 +64,16 @@ describe StatementRecordCategoryRules::CategoryRuleBase do
       expect {
         rule.destroy
       }.to change { StatementRecordCategoryRules::CategoryRuleBase.count }.by(-1)
+    end
+  end
+
+  describe '#string_or_empty' do
+    it 'should return an empty string when given anything else than a string' do
+      expect(described_class.new.send(:string_or_empty, nil)).to eq('')
+      expect(described_class.new.send(:string_or_empty, 5)).to eq('')
+    end
+    it 'should return the given string' do
+      expect(described_class.new.send(:string_or_empty, 'Test')).to eq('Test')
     end
   end
 

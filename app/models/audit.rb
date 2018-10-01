@@ -26,6 +26,7 @@ class Audit < Audited::Audit
     model_name = self.auditable_type
     return "Transaction" if model_name == "StatementRecord"
     return "Parser" if model_name.starts_with?("StatementParsers")
+    return "Category Rule" if model_name.starts_with?("StatementRecordCategoryRules")
     model_name = model_name.gsub(/([a-z])([A-Z])/) {|m| "#{m[0]} #{m[1]}" }
     model_name
   end
@@ -34,6 +35,7 @@ class Audit < Audited::Audit
     router = Rails.application.routes.url_helpers
     model = self.auditable_type.underscore
     model = "statement_parser" if model.starts_with?("statement_parsers/")
+    model = "statement_record_category_rule" if model.starts_with?("statement_record_category_rules/")
     path_attr = "#{model}_path"
     router.respond_to?(path_attr) ? router.send(path_attr, self.auditable_id) : nil
   end
