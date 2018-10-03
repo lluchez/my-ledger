@@ -84,7 +84,7 @@ describe StatementRecord do
     end
   end
 
-  describe '#apply_matching_rule' do
+  describe '#search_and_apply_matching_rule' do
     let(:user) { FactoryBot.create(:user) }
     let!(:rule) { FactoryBot.create(:regexp_category_rule, :user => user, :pattern => '\d+') }
 
@@ -133,4 +133,38 @@ describe StatementRecord do
     end
   end
 
+  describe '#apply_matching_rule' do # do not persist
+    it 'should raise a rollbar and do nothing when user_id does not match' do
+      record = StatementRecord.new(:user_id => 5)
+      rule = StatementRecordCategoryRules::RegexpCategoryRule.new(:id => 519, :category_id => 79, :user_id => 6)
+      expect(RollbarHelper).to receive(:warning).once
+      record.apply_matching_rule(rule)
+
+      expect(record.category_rule_id).to be(nil)
+      expect(record.category_rule_id_changed?).to be(false)
+      expect(record.category_id).to be(nil)
+      expect(record.category_id_changed?).to be(false)
+    end
+    it 'should set category_rule_id and category_id on the given record from the given rule' do
+      rule = FactoryBot.create(:text_category_rule, :pattern => 'abc')
+      record = FactoryBot.create(:statement_record, :description => 'something not auto-matching', :user => rule.user)
+      record.apply_matching_rule(rule)
+
+      expect(record.category_rule_id).to eq(rule.id)
+      expect(record.category_id).to eq(rule.category_id)
+      expect(record.changed?).to be(true) # changes have not been persisted
+    end
+  end
+
+  describe '#apply_matching_rule!' do # persist changes
+    it 'should update category_rule_id and category_id on the given record from the given rule' do
+      rule = FactoryBot.create(:text_category_rule, :pattern => 'abc')
+      record = FactoryBot.create(:statement_record, :description => 'something not auto-matching', :user => rule.user)
+      record.apply_matching_rule!(rule) # with bang `!`
+
+      expect(record.category_rule_id).to eq(rule.id)
+      expect(record.category_id).to eq(rule.category_id)
+      expect(record.changed?).to be(false) # changes have been persisted
+    end
+  end
 end

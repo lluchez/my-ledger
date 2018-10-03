@@ -52,9 +52,12 @@
       </div>
 
       <div class="form-group">
-        <%= f.label :case_sensitive, "Case Insensitive:", class: css_col_label %>
+        <%= f.label :case_sensitive, "Case Sensitive:", class: css_col_label %>
         <div class="<%= css_col_input %> cell-label">
-          <label class="reset"><%= f.check_box :case_sensitive %> Pattern is case insensitive (<span class="font-pre bkgd">Store</span> will match <span class="font-pre bkgd">STORE</span>)</label>
+          <label class="reset">
+            <%= f.check_box :case_sensitive %>
+            Pattern is case sensitive (<span class="font-pre bkgd">Store</span> will <u>NOT</u> match <span class="font-pre bkgd">STORE</span>)
+          </label>
         </div>
       </div>
 
@@ -62,6 +65,13 @@
         <%= f.label :active, "Active:", class: css_col_label %>
         <div class="<%= css_col_input %> cell-label">
           <label class="reset"><%= f.check_box :active %> Active (disabled rules won't automatically be applied)</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="<%= css_col_label %>" for="run_upon_update">Option:</label>
+        <div class="<%= css_col_input %> cell-label">
+          <label class="reset"><input name="run_upon_update" id="run_upon_update" type="checkbox" value="1" checked /> Apply this rule to uncategorized transactions upon creation/change</label>
         </div>
       </div>
     </div>

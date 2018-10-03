@@ -114,6 +114,8 @@ en:
       type: "Category"
     statement_record_category_rules_controller:
       type: "Category Rule"
+      created_with_record_update: "Category Rule %{name} was successfully created. %{records_updated} transaction(s) have been updated."
+      updated_with_record_update: "Category Rule %{name} was successfully updated. %{records_updated} transaction(s) have been updated."
     statement_records_controller:
       type: "Transaction"
       invalid_statement: "Invalid statement"
