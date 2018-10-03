@@ -8,11 +8,12 @@ class StatementRecord < ApplicationRecord
   audited :associated_with => :statement
 
   scope :from_user, ->(user) { where(:user_id => user.id) }
+  scope :uncategorized, ->{ where(:category_id => nil) }
 
   validates_presence_of :user_id, :statement_id, :amount, :date, :description
 
   before_validation :unset_category_rule, :if =>  Proc.new { |record| record.category_id_changed? && record.category_rule_id_was.present? }
-  before_save :apply_matching_rule, :if => Proc.new { |record| record.description_changed? && record.category_id.nil? }
+  before_save :search_and_apply_matching_rule, :if => Proc.new { |record| record.description_changed? && record.category_id.nil? }
   after_save :update_statement_total_amount_after_save
   after_destroy :update_statement_total_amount_after_destroy
 
@@ -22,11 +23,23 @@ class StatementRecord < ApplicationRecord
     BankStatementsCsvImport.new(user).import(statement, csv_file, remove_existing_records)
   end
 
-  def apply_matching_rule
+  def search_and_apply_matching_rule
     rule = self.find_matching_rule
     return unless rule.present?
-    self.category_rule_id = rule.id
-    self.category_id = rule.category_id
+    self.apply_matching_rule(rule)
+  end
+
+  def apply_matching_rule(rule)
+    if rule.try(:user_id) != self.user_id
+      RollbarHelper.warning("Tried to apply the Rule #{rule} with Record #{self}, but user_id don't match", :fingerprint => 'user_id_mismatch_for_apply_rule')
+      return
+    end
+    self.assign_attributes(:category_rule_id => rule.id, :category_id => rule.category_id)
+  end
+
+  def apply_matching_rule!(rule)
+    self.apply_matching_rule(rule)
+    self.save!
   end
 
   def find_matching_rule

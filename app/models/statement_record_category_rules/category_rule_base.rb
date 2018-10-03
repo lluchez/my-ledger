@@ -8,15 +8,18 @@ class StatementRecordCategoryRules::CategoryRuleBase < ApplicationRecord
   audited :associated_with => :category
 
   scope :from_user, ->(user) { where(:user_id => user.id) }
+  scope :active, ->{ where(:active => true) }
+
+  attr_accessor :run_upon_update, :records_updated
 
   validates_presence_of :name, :pattern, :user_id, :category_id
   validate :type_should_be_valid
   validate :validate_specific_fields
 
+  after_save :update_uncategorized_records
+
   self.inheritance_column = :type
   self.table_name = "statement_record_category_rules"
-
-  scope :active, ->{ where(:active => true) }
 
   def type_formatted
     self.class.types_hash[self.type]
@@ -67,6 +70,14 @@ class StatementRecordCategoryRules::CategoryRuleBase < ApplicationRecord
     if StatementRecord.where(:category_rule_id => self.id).any?
       errors.add(:base, :cant_delete_in_use)
       throw :abort
+    end
+  end
+
+  def update_uncategorized_records
+    if self.run_upon_update
+      records = StatementRecord.from_user(self.user).uncategorized.select { |record| self.matches?(record.description) }
+      records.each { |record| record.apply_matching_rule!(self) }
+      self.records_updated = records.count
     end
   end
 

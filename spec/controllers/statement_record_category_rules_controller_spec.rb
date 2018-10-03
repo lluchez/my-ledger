@@ -138,14 +138,42 @@ RSpec.describe StatementRecordCategoryRulesController, type: :controller do
       # expect(flash[:error]).to be_present
     end
 
-    it "should create the category rule and returns a success response" do
-      sign_in(user)
+    context 'when run_upon_update is falsey or missing' do
+      it "should create the category rule, returns a success response and do not update existing records" do
+        sign_in(user)
+        record = FactoryBot.create(:statement_record, :user => user, :description => 'abc 123', :category_id => nil)
 
-      expect {
-        post :create, params: {param_key => category_rule_attrs}
-      }.to change { user.statement_record_category_rules.count }.by(1)
-      expect(response).to redirect_to(statement_record_category_rules_url)
-      # expect(flash[:notice]).to be_present
+        expect {
+          post :create, params: {param_key => category_rule_attrs.merge(:pattern => 'abc')} #, :run_upon_update => '0'}
+        }.to change { user.statement_record_category_rules.count }.by(1)
+        expect(response).to redirect_to(statement_record_category_rules_url)
+        # expect(flash[:notice]).to be_present
+        created_rule = assigns[:category_rule]
+
+        # make sure the record has been updated
+        record.reload
+        expect(record.category_id).to be(nil)
+        expect(record.category_rule_id).to be(nil)
+      end
+    end
+
+    context 'when run_upon_update is true' do
+      it "should create the category rule, returns a success response and update existing records" do
+        sign_in(user)
+        record = FactoryBot.create(:statement_record, :user => user, :description => 'abc 123', :category_id => nil)
+
+        expect {
+          post :create, params: {param_key => category_rule_attrs.merge(:pattern => 'abc'), :run_upon_update => '1'}
+        }.to change { user.statement_record_category_rules.count }.by(1)
+        expect(response).to redirect_to(statement_record_category_rules_url)
+        # expect(flash[:notice]).to be_present
+        created_rule = assigns[:category_rule]
+
+        # make sure the record has been updated
+        record.reload
+        expect(record.category_id).to eq(created_rule.category_id)
+        expect(record.category_rule_id).to eq(created_rule.id)
+      end
     end
 
     it "should create the category rule and returns a success JSON response" do
