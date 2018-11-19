@@ -1,10 +1,24 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Test from './components/test.jsx'
+import Dashboard from './components/dashboard.jsx'
+
+function init() {
+  function getComponent(className) {
+    return {
+      Dashboard
+    }[className]
+  }
+
+  $('div[data-react-class]').each( (i,node) => {
+    const $node = $(node),
+      className = $node.attr("data-react-class"),
+      props = JSON.parse($node.attr('data-react-props') || '{}'),
+      component = getComponent(className)
+    if( component )
+      ReactDOM.render(React.createElement(component, props), node)
+  })
+}
 
 
-document.addEventListener("DOMContentLoaded", function() {
-  const main = document.getElementById("main")
-  ReactDOM.render(React.createElement(Test, {}), main)
-})
-
+// document.addEventListener("DOMContentLoaded", init)
+$(document).on('turbolinks:load', init)

@@ -1,4 +1,4 @@
- class ErrorsController < ApplicationController
+class ErrorsController < ApplicationController
 
   def not_found ; render_error(404) ; end
   def unprocessable_entity ; render_error(422) ; end

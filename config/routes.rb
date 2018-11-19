@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get '/dashboard' => 'dashboard#index'
   resources :audits, :only => [:index]
   resources :bank_accounts
   resources :bank_statements do
@@ -22,7 +23,7 @@ Rails.application.routes.draw do
 
   match "/test", :to => "test#index", :via => :all
 
-  root 'application#index'
+  root 'dashboard#index'
 
   match "/404", :to => "errors#not_found", :via => :all
   match "/422", :to => "errors#unprocessable_entity", :via => :all
