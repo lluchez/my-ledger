@@ -8,7 +8,7 @@ end
 ruby '2.2.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.2.0'
+gem 'rails', '5.2.1.1'
 # Use Puma as the app server
 gem 'puma', '3.11.2'
 # Use Bootsnap for faster boot
@@ -47,7 +47,7 @@ group :development, :test do
   # Use mysql as the database for Active Record
   gem 'mysql2', '>= 0.3.18', '< 0.5'
   # To detect N+1 queries
-  gem 'bullet'
+  gem 'bullet', '5.7.6'
   # Allow debugger
   gem 'pry'
   gem 'pry-nav'
